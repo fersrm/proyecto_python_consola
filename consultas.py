@@ -1,13 +1,17 @@
 from conexion import Conexion, pymysql
-from clases import DatosUsuario
-from validaciones import valida_run, valida_clave
+from clases import DatosUsuario, Producto
+from validaciones import (
+    valida_run, 
+    valida_clave, 
+    valida_producto
+)
 
 # Funciones de consultas SQL
 def obtener_datos_usuario(run, clave):
     try:
         # Normalizo los datos
-        run = run.upper()  
-        clave = clave.upper()
+        run = run.strip().upper()  
+        clave = clave.strip().upper()
         # Validación de RUN y clave
         if not valida_run(run): 
             return 1
@@ -48,4 +52,94 @@ def obtener_datos_usuario(run, clave):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return 4  # Ocurrió un error en la operación de la base de datos.
+
+# Funciones para productos
+def buscar_producto(dato_producto):
+    try:
+        # Normalizo los datos
+        dato_producto = dato_producto.upper()  
+        # Validación de nombre o codigo
+        if not valida_producto(dato_producto) : 
+            return False
+        
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = ("SELECT codigo_producto, nombre_producto "
+                         "FROM PRODUCTOS " 
+                         "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
+            # Verificar si se encontraron resultados
+            resultados = cursor.fetchall()
+            
+            # Verificar si se encontraron resultados
+            cantidad_productos = len(resultados)
+            if cantidad_productos > 0:
+                return cantidad_productos
+
+        return False  # No se encontro el producto.
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
+def obtener_datos_producto(dato_producto):
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = ("SELECT p.codigo_producto, p.nombre_producto, p.precio_producto, m.nombre_marca, c.nombre_categoria "
+                        "FROM PRODUCTOS AS p "
+                        "INNER JOIN MARCAS AS m "
+                            "ON p.marca_FK = m.id_marca "
+                        "INNER JOIN CATEGORIAS AS c "
+                            "ON p.categoria_FK = c.id_categoria "
+                        "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
+            datos = cursor.fetchone()
+        # Se guardan los datos
+        if datos:
+            codigo_producto = datos[0].upper()
+            nombre_producto = datos[1].upper()
+            precio_producto = datos[2]
+            marca = datos[3].upper()
+            categoria = datos[4].upper()
+            # Se crea una intancia con los datos
+            producto = Producto(codigo_producto, nombre_producto, precio_producto, marca, categoria)
+            return producto
+
+        return None  # No se encontraron datos para el usuario especificado.
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
+def obtener_lista_productos(dato_producto):
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = ("SELECT codigo_producto, nombre_producto "
+                         "FROM PRODUCTOS " 
+                         "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
+            datos = cursor.fetchall()
+        # Se guardan los datos en una lista de diccionarios
+        productos = []
+        for dato in datos:
+            codigo_producto = dato[0].upper()
+            nombre_producto = dato[1].upper()
+            producto = {"codigo": codigo_producto, "nombre": nombre_producto}
+            productos.append(producto)
+        return productos
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None
 

@@ -12,7 +12,6 @@ def valida_numero(numero):
     return int(numero)
 
 def valida_run(run):
-    run = run.strip()
     if not run:
         return False  # Error, el campo está vacío
     
@@ -23,12 +22,21 @@ def valida_run(run):
     return True
 
 def valida_clave(clave):
-    clave = clave.strip()
     if not clave:
         return False  # Error, el campo está vacío
     
     # Verificar longitud y si es alfanumérica.
     if len(clave) != 8 or not clave.isalnum():
         return False  # Error la validacion de la clave.
+    
+    return True
+
+def valida_producto(dato_evaluar): # Evalua nombre o codigo
+    if not dato_evaluar:
+        return False  # Error, el campo está vacío
+    
+    # Verificar longitud
+    if len(dato_evaluar) < 2:
+        return False  # Error la validacion del producto
     
     return True

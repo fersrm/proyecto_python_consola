@@ -96,19 +96,12 @@ class DatosCliente(Persona):
 
 # Clase de productos
 class Producto:
-    def __init__(self, id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria):
-        self.__id = id_producto
+    def __init__(self, codigo_producto, nombre_producto, precio_producto, marca, categoria):
         self.__codigo = codigo_producto
         self.__nombre = nombre_producto
         self.__precio = precio_producto
         self.__marca = marca
         self.__categoria = categoria
-
-    def set_id(self, id_producto):
-        self.__id = id_producto
-
-    def get_id(self):
-        return self.__id
 
     def set_codigo(self, codigo_producto):
         self.__codigo = codigo_producto
