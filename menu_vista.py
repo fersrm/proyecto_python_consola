@@ -4,7 +4,7 @@ import os # para limpiar la consola
 from prettytable import PrettyTable # para crear tabla en consola
 
 # Funciones de opciones Generales
-def mostrar_mensaje_bienvenida(nombre,apellido,rol):
+def mostrar_mensaje_bienvenida(datos_usuario):
     # Crear la tabla
     tabla = PrettyTable()
     
@@ -12,6 +12,10 @@ def mostrar_mensaje_bienvenida(nombre,apellido,rol):
     tabla.field_names = ["BIENVENIDO AL SISTEMA DE VENTAS"]
     
     # Agregar el contenido de la tabla
+    nombre = datos_usuario["nombre"]
+    apellido = datos_usuario["apellido"]
+    rol = datos_usuario["rol"]
+    
     tabla.add_row([f"{rol}: {nombre} {apellido}"])
     
     # Personalizar el formato de la tabla
@@ -90,10 +94,10 @@ def crear_tabla(opciones):
     print(table)
 
 # Función para iniciar el menú de jefe de ventas
-def iniciar_menu_jefe_ventas(nombre,apellido,rol):
+def iniciar_menu_jefe_ventas(datos_usuario):
     while True:
         os.system('cls')
-        mostrar_mensaje_bienvenida(nombre,apellido,rol)
+        mostrar_mensaje_bienvenida(datos_usuario)
         opciones = [
             ("1", "Opción 1"),
             ("2", "Opción 2"),
@@ -109,10 +113,10 @@ def iniciar_menu_jefe_ventas(nombre,apellido,rol):
             break
 
 # Función para iniciar el menú de vendedor
-def iniciar_menu_vendedor(nombre,apellido,rol):
+def iniciar_menu_vendedor(datos_usuario):
     while True:
         os.system('cls')
-        mostrar_mensaje_bienvenida(nombre,apellido,rol)
+        mostrar_mensaje_bienvenida(datos_usuario)
         opciones = [
             ("1", "Opción 1"),
             ("2", "Opción 2"),

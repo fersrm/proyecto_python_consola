@@ -61,11 +61,13 @@ class DatosUsuario(Persona):
 
     def get_clave(self):
         return self.__clave
-
-    def autenticar(self, run, clave):
-        if self.get_run() == run and self.get_clave() == clave:
-            return True
-        return False
+    
+    def get_datos_usuario(self):
+        return {
+            "nombre": self.get_nombre(),
+            "apellido": self.get_apellido(),
+            "rol": self.get_rol()
+        }
 
 class DatosCliente(Persona):
     def __init__(self, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):

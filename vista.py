@@ -36,10 +36,11 @@ def iniciar_aplicacion():
             print("Error en el inicio de sesión")
             pausa()
 
+    datos_usuario = datos.get_datos_usuario()
     if datos.get_id_rol() == 1:
-        iniciar_menu_jefe_ventas(datos.get_nombre(), datos.get_apellido(), datos.get_rol())
+        iniciar_menu_jefe_ventas(datos_usuario)
     elif datos.get_id_rol() == 2:
-        iniciar_menu_vendedor(datos.get_nombre(), datos.get_apellido(), datos.get_rol())
+        iniciar_menu_vendedor(datos_usuario)
     else:
         print("Rol de usuario no válido")
 
