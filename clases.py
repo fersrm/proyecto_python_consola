@@ -69,6 +69,7 @@ class DatosUsuario(Persona):
             "rol": self.get_rol()
         }
 
+
 class DatosCliente(Persona):
     def __init__(self, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):
         super().__init__(run, nombre, apellido, comuna, region)
@@ -286,8 +287,8 @@ class CarritoCompra:
             print("El carrito de compra está vacío.")
             return
 
-        table = PrettyTable()
-        table.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
+        tabla = PrettyTable()
+        tabla.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
 
         total_carrito = 0
 
@@ -298,11 +299,11 @@ class CarritoCompra:
             total = cantidad * precio_unitario
             total_carrito += total
 
-            table.add_row([i, producto.get_codigo(), producto.get_nombre(), cantidad, precio_unitario, total])
+            tabla.add_row([i, producto.get_codigo(), producto.get_nombre(), cantidad, precio_unitario, total])
 
-        table.add_row(["", "", "", "", "Total", total_carrito])
+        tabla.add_row(["", "", "", "", "Total", total_carrito])
 
-        print(table)
+        print(tabla)
 
     def vaciar_carrito(self):
         self.productos = []
