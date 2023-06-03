@@ -2,7 +2,7 @@ from validaciones import valida_numero, valida_producto
 from consultas import (
     obtener_datos_producto,
     buscar_producto,
-    obtener_lista_productos
+    obtener_lista_productos,
 )
 # librerias externas
 import os # para limpiar la consola
@@ -79,7 +79,8 @@ def agregar_detalle_productos():
             if seleccion <= len(productos):
                 codigo = productos[int(seleccion) - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
-                print(producto_seleccionado)
+                agregar_lista_detalle(producto_seleccionado)
+                print("Producto agregado al carrito")
             else:
                 print("Selección inválida")
         else:
@@ -90,7 +91,8 @@ def agregar_detalle_productos():
         producto = obtener_datos_producto(dato_producto)
 
         if producto:
-            print(producto)
+            agregar_lista_detalle(producto)
+            print("Producto agregado al carrito")
         else:
             print("No se encontraron datos para el producto especificado.")
     
@@ -105,9 +107,60 @@ def mostrar_tabla_productos(productos):
         table.add_row([i, producto["codigo"], producto["nombre"]])
     print(table)
 
-# Funcionabilidad generar venta
-def genera_venta():
+# Funcionabilidad mostrar carrito
+carrito_compra = [] # carrito de compra
+def agregar_lista_detalle(producto):
+    carrito_compra.append(producto)
+    return carrito_compra
+
+def mostrar_tabla_carrito_compra(carrito_compra):
+    table = PrettyTable()
+    table.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad de producto", "Precio Unitario", "Total"]
+
+    # Diccionario para almacenar la cantidad de cada producto en el carrito
+    cantidad_productos = {}
+    total_carrito = 0  # Variable para calcular el total del carrito
+
+    # Calcular la cantidad de cada producto en el carrito y calcular el total
+    for producto in carrito_compra:
+        codigo_producto = producto.get_codigo()
+        if codigo_producto in cantidad_productos:
+            cantidad_productos[codigo_producto] += 1
+        else:
+            cantidad_productos[codigo_producto] = 1
+        total_carrito += producto.get_precio()
+
+    # Agregar filas a la tabla con los productos y su cantidad
+    productos_agregados = set()  # Conjunto para almacenar los códigos de productos agregados
+    for i, producto in enumerate(carrito_compra, start=1):
+        codigo_producto = producto.get_codigo()
+
+        # Verificar si el producto ya ha sido agregado a la tabla
+        if codigo_producto in productos_agregados:
+            continue  # Saltar a la siguiente iteración si ya se agregó el producto
+
+        nombre_producto = producto.get_nombre()
+        cantidad_producto = cantidad_productos[codigo_producto]
+        precio_unitario = producto.get_precio()
+        total = cantidad_producto * precio_unitario
+        table.add_row([i, codigo_producto, nombre_producto, cantidad_producto, precio_unitario, total])
+
+        # Agregar el código del producto al conjunto de productos agregados
+        productos_agregados.add(codigo_producto)
+
+    # Agregar fila adicional para mostrar el total del carrito
+    table.add_row(["", "", "", "", "Total", total_carrito])
+
+    print(table)
+    
+# Funcionabilidad mostrar carrito
+def ver_detalle_carrito(carrito_compra):
     print("Opción 2 seleccionada")
+    if not carrito_compra:
+        print("La lista de productos está vacía.")
+    else:
+        mostrar_tabla_carrito_compra(carrito_compra)
+
 
 # Diccionario de opciones
 menu_jefe_ventas = {
@@ -119,7 +172,7 @@ menu_jefe_ventas = {
 
 menu_vendedor = {
     1: (agregar_detalle_productos, []),
-    2: (genera_venta, []),
+    2: (ver_detalle_carrito, [carrito_compra]),
     3: (salir, [])
 }
 
@@ -180,7 +233,7 @@ def iniciar_menu_vendedor(datos_usuario):
         mostrar_mensaje_bienvenida(datos_usuario)
         opciones = [
             ("1", "Registro de productos"),
-            ("2", "Generar Venta"),
+            ("2", "Mostrar dellate carrito"),
             ("3", "Salir")
         ]
         

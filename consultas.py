@@ -142,4 +142,3 @@ def obtener_lista_productos(dato_producto):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None
-
