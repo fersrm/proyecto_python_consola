@@ -4,6 +4,7 @@ from consultas import (
     buscar_producto,
     obtener_lista_productos,
 )
+from clases import CarritoCompra
 # librerias externas
 import os # para limpiar la consola
 from prettytable import PrettyTable # para crear tabla en consola
@@ -47,12 +48,15 @@ def opcion3(c):
     print("Opción 3 seleccionada")
 
 # Funciones de opciones Menú vendedor
-# Funcionabilidad registrar productos
+
+# Se crea instancia de carrito de compra
+carrito = CarritoCompra()
+# Funcionabilidad agregar productos al detalle de la compra : busca el prodcuto y si lo encuenta lo agrega, si ahi mas de uno a a eleguir
 def agregar_detalle_productos():
     print("Opción 1 seleccionada")
 
     # Solicitar al usuario que ingrese el nombre o código del producto
-    dato_producto = input("Ingrese nombre o código: ")
+    dato_producto = input("Ingrese nombre o código del producto: ")
 
     # Normalizar los datos ingresados
     dato_producto = dato_producto.strip().upper()
@@ -63,7 +67,6 @@ def agregar_detalle_productos():
         return False
 
     cantidad_producto = buscar_producto(dato_producto)
-
     # Verificar si se encontraron múltiples productos
     if cantidad_producto > 1:
         productos = obtener_lista_productos(dato_producto)
@@ -79,7 +82,8 @@ def agregar_detalle_productos():
             if seleccion <= len(productos):
                 codigo = productos[int(seleccion) - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
-                agregar_lista_detalle(producto_seleccionado)
+                cantidad = seleccionar_opcion("Ingrese la cantidad : ")("Ingrese la cantidad : ")
+                carrito.agregar_producto(producto_seleccionado, cantidad)
                 print("Producto agregado al carrito")
             else:
                 print("Selección inválida")
@@ -91,7 +95,8 @@ def agregar_detalle_productos():
         producto = obtener_datos_producto(dato_producto)
 
         if producto:
-            agregar_lista_detalle(producto)
+            cantidad = seleccionar_opcion("Ingrese la cantidad : ")
+            carrito.agregar_producto(producto, cantidad)
             print("Producto agregado al carrito")
         else:
             print("No se encontraron datos para el producto especificado.")
@@ -99,68 +104,19 @@ def agregar_detalle_productos():
     # No se encontraron productos
     else:
         print("No se encontraron productos.")
-
+# Muestra una tabla si en la busqueda se encontro mas de un producto
 def mostrar_tabla_productos(productos):
     table = PrettyTable()
     table.field_names = ["Número", "Código Producto", "Nombre Producto"]
     for i, producto in enumerate(productos, start=1):
         table.add_row([i, producto["codigo"], producto["nombre"]])
     print(table)
-
-# Funcionabilidad mostrar carrito
-carrito_compra = [] # carrito de compra
-def agregar_lista_detalle(producto):
-    carrito_compra.append(producto)
-    return carrito_compra
-
-def mostrar_tabla_carrito_compra(carrito_compra):
-    table = PrettyTable()
-    table.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad de producto", "Precio Unitario", "Total"]
-
-    # Diccionario para almacenar la cantidad de cada producto en el carrito
-    cantidad_productos = {}
-    total_carrito = 0  # Variable para calcular el total del carrito
-
-    # Calcular la cantidad de cada producto en el carrito y calcular el total
-    for producto in carrito_compra:
-        codigo_producto = producto.get_codigo()
-        if codigo_producto in cantidad_productos:
-            cantidad_productos[codigo_producto] += 1
-        else:
-            cantidad_productos[codigo_producto] = 1
-        total_carrito += producto.get_precio()
-
-    # Agregar filas a la tabla con los productos y su cantidad
-    productos_agregados = set()  # Conjunto para almacenar los códigos de productos agregados
-    for i, producto in enumerate(carrito_compra, start=1):
-        codigo_producto = producto.get_codigo()
-
-        # Verificar si el producto ya ha sido agregado a la tabla
-        if codigo_producto in productos_agregados:
-            continue  # Saltar a la siguiente iteración si ya se agregó el producto
-
-        nombre_producto = producto.get_nombre()
-        cantidad_producto = cantidad_productos[codigo_producto]
-        precio_unitario = producto.get_precio()
-        total = cantidad_producto * precio_unitario
-        table.add_row([i, codigo_producto, nombre_producto, cantidad_producto, precio_unitario, total])
-
-        # Agregar el código del producto al conjunto de productos agregados
-        productos_agregados.add(codigo_producto)
-
-    # Agregar fila adicional para mostrar el total del carrito
-    table.add_row(["", "", "", "", "Total", total_carrito])
-
-    print(table)
     
-# Funcionabilidad mostrar carrito
-def ver_detalle_carrito(carrito_compra):
+# Funcionabilidad mostrar carrito de compra
+def ver_detalle_carrito():
     print("Opción 2 seleccionada")
-    if not carrito_compra:
-        print("La lista de productos está vacía.")
-    else:
-        mostrar_tabla_carrito_compra(carrito_compra)
-
+    carrito.mostrar_detalle()
+    ### agregar submenu de opciones del carrito ### "actualizar y vaciar"
 
 # Diccionario de opciones
 menu_jefe_ventas = {
@@ -172,11 +128,11 @@ menu_jefe_ventas = {
 
 menu_vendedor = {
     1: (agregar_detalle_productos, []),
-    2: (ver_detalle_carrito, [carrito_compra]),
+    2: (ver_detalle_carrito, []),
     3: (salir, [])
 }
 
-# Función para seleccionar una opción del menú
+# Función para seleccionar una opción del menú o un numero
 def seleccionar_opcion(mensaje):
     while True:
         numero = input(mensaje)
@@ -195,7 +151,7 @@ def ejecutar_opcion(menu, opcion):
     else:
         print("Opción no válida")
 
-# Función para crear una tabla
+# Función para crear una tabla de opciones para los menu
 def crear_tabla(opciones):
     # definir los encabezados
     table = PrettyTable(["Opción", "Descripción"])

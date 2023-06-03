@@ -259,3 +259,50 @@ class DetalleEmpresa:
 
     def get_estado(self):
         return self.__estado
+
+
+# Clase carrito de compra
+from prettytable import PrettyTable
+
+class CarritoCompra:
+    def __init__(self):
+        self.productos = []
+
+    def agregar_producto(self, producto, cantidad=1):
+        for item in self.productos:
+            if item['producto'].get_codigo() == producto.get_codigo():
+                item['cantidad'] += cantidad
+                return
+        self.productos.append({'producto': producto, 'cantidad': cantidad})
+
+    def actualizar_cantidad(self, codigo_producto, nueva_cantidad):
+        for item in self.productos:
+            if item['producto'].get_codigo() == codigo_producto:
+                item['cantidad'] = nueva_cantidad
+                return
+
+    def mostrar_detalle(self):
+        if not self.productos:
+            print("El carrito de compra está vacío.")
+            return
+
+        table = PrettyTable()
+        table.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
+
+        total_carrito = 0
+
+        for i, item in enumerate(self.productos, start=1):
+            producto = item['producto']
+            cantidad = item['cantidad']
+            precio_unitario = producto.get_precio()
+            total = cantidad * precio_unitario
+            total_carrito += total
+
+            table.add_row([i, producto.get_codigo(), producto.get_nombre(), cantidad, precio_unitario, total])
+
+        table.add_row(["", "", "", "", "Total", total_carrito])
+
+        print(table)
+
+    def vaciar_carrito(self):
+        self.productos = []
