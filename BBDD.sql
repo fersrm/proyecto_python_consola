@@ -359,5 +359,119 @@ INSERT INTO `bazar`.`USUARIOS` (`run_usuario`, `clave_usuario`, `nombre_usuario`
 ('12345678-K', 'PASS1234', 'PEDRO', 'GARCIA', 2, 3),
 ('1234567-8', 'PASS1234', 'ANA', 'MARTINEZ', 2, 3);
 -- -----------------------------------------------------
--- Insert 
+-- Insert Tipo Giro
 -- -----------------------------------------------------
+INSERT INTO `bazar`.`TIPO_GIRO` (`nombre_giro`) VALUES
+('MAYORISTA'),
+('MINORISTA');
+-- -----------------------------------------------------
+-- Insert Razon Social
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`RAZON_SOCIAL` (`razon_social`) VALUES
+('NO TIENE'),
+('TECHNEXUS GROUP LTD'),
+('INNOVATECH SOLUTIONS CORP');
+-- -----------------------------------------------------
+-- Insert Clientes
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`CLIENTES` (`run_cliente`, `nombre_cliente`, `apellido_cliente`, `direccion`, `comuna_FK`, `tipo_giro_FK`, `razon_social_FK`) VALUES
+('20512977-1', 'ELIZABETH', 'CUEVAS', 'DIREC2312', 3, 2, 2),
+('19415787-2', 'JORGE', 'MATTIONI', 'DIREC9084', 3, 1, 2),
+('17682634-3', 'LUNA', 'ARRIAGADA', 'CALLE2034', 2, 2, 2),
+('207425912-0', 'ALBERTO', 'QUINTEROS', 'CALLE322', 1, 1, 1),
+('17727812-5', 'JULIA', 'ACUÑA', 'DIREC22', 6, 2, 3),
+('18626384-9', 'ROCIO', 'ZUÑIGA', 'DIREC726', 9, 1, 1),
+('20233902-2', 'CARLA', 'AVILA', 'DIREC221', 7, 1, 1),
+('16243683-3', 'ALYSSA', 'ARAYA', 'CALLE473', 10, 2, 3),
+('16326897-1', 'LIAM', 'CADIZ', 'DIRECT9282', 1, 2, 3),
+('17633922-2', 'AGUSTIN', 'ROSAS', 'CALLE2233', 2, 1, 1);
+-- -----------------------------------------------------
+-- Insert Marcas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`MARCAS` (`nombre_marca`) VALUES
+('LOGITEC'),
+('SONY'),
+('PHILIPS'),
+('JBL'),
+('MONSTER'),
+('SAMSUNG'),
+('HP'),
+('DELL');
+-- -----------------------------------------------------
+-- Insert Categorias
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`CATEGORIAS` (`nombre_categoria`) VALUES
+('TECLADOS'),
+('AUDIFONOS'),
+('MOUSE'),
+('PARLANTES'),
+('MONITORES');
+-- -----------------------------------------------------
+-- Insert Productos
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`PRODUCTOS` (`codigo_producto`, `nombre_producto`, `precio_producto`, `marca_FK`, `usuario_FK`, `categoria_FK`) VALUES
+('97656', 'AUDIFONOS INALAMBRICOS', 29990, 4, 1, 2),
+('87623', 'MOUSE ERGONOMICO', 10990, 1, 1, 3),
+('12462', 'PARLANTE INFANTIL', 11990, 2, 1, 4),
+('82346', 'TECLADO OFICINA', 9990, 1, 1, 1),
+('44832', 'MOUSE INALAMBRICO', 6999, 5, 1, 3),
+('12345', 'MONITOR DEPREDADOR', 19990, 8, 1, 5),
+('123456', 'MONITOR NORMAL', 26999, 7, 1, 5);
+-- -----------------------------------------------------
+-- Insert ventas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`VENTAS` (`fecha_emcion`, `cliente_FK`, `usuario_FK`) VALUES 
+('2023-06-01 09:00:00', 1, 2),
+('2023-06-02 14:30:00', 2, 2),
+('2023-06-03 11:45:00', 2, 2),
+('2023-06-04 16:20:00', 2, 2),
+('2023-06-05 10:15:00', 3, 3),
+('2023-06-06 13:45:00', 4, 3),
+('2023-06-07 15:30:00', 4, 4),
+('2023-06-08 12:10:00', 5, 4),
+('2023-06-09 10:45:00', 5, 5),
+('2023-06-10 17:00:00', 10, 5);
+-- -----------------------------------------------------
+-- Insert facturas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`FACTURAS` (`total_factura`, `venta_FK`) VALUES 
+((29990 * 2), 1),
+(((10990 * 3) + (11990 * 1) ), 2),
+(((29990 * 2) + (10990 * 1) + (11990 * 1) ), 3),
+((29990 * 2), 4),
+(((10990 * 5) + (11990 * 2)), 5);
+-- -----------------------------------------------------
+-- Insert boletas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`BOLETAS` (`total_boleta`, `venta_FK`) VALUES 
+((29990 * 2), 6),
+(((10990 * 3) + (11990 * 1) ), 7),
+(((29990 * 2) + (10990 * 1) + (11990 * 1) ), 8),
+((29990 * 2), 9),
+(((10990 * 5) + (11990 * 2)), 10);
+-- -----------------------------------------------------
+-- Insert Detalle Boletas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`DETALLE_FACTURAS` (`cantidad`, `total`, `producto_FK`, `factura_FK`) VALUES 
+(2,(29990 * 2) , 1, 1),
+(3,(10990 * 3) , 2, 2),
+(1,(11990 * 1) , 3, 2),
+(2,(29990 * 2) , 1, 3),
+(1,(10990 * 1) , 2, 3),
+(1,(11990 * 1) , 3, 3),
+(2,(29990 * 2) , 1, 4),
+(5,(10990 * 5) , 2, 5),
+(2,(11990 * 2) , 3, 5);
+-- -----------------------------------------------------
+-- Insert Detalle Boletas
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`DETALLE_BOLETAS` (`cantidad`, `total`, `producto_FK`, `boleta_FK`) VALUES 
+(2,(29990 * 2) , 1, 1),
+(3,(10990 * 3) , 2, 2),
+(1,(11990 * 1) , 3, 2),
+(2,(29990 * 2) , 1, 3),
+(1,(10990 * 1) , 2, 3),
+(1,(11990 * 1) , 3, 3),
+(2,(29990 * 2) , 1, 4),
+(5,(10990 * 5) , 2, 5),
+(2,(11990 * 2) , 3, 5);
