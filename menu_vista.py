@@ -82,7 +82,7 @@ def agregar_detalle_productos():
             if seleccion <= len(productos):
                 codigo = productos[int(seleccion) - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
-                cantidad = seleccionar_opcion("Ingrese la cantidad : ")("Ingrese la cantidad : ")
+                cantidad = seleccionar_opcion("Ingrese la cantidad : ")
                 carrito.agregar_producto(producto_seleccionado, cantidad)
                 print("Producto agregado al carrito")
             else:
