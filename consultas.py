@@ -7,6 +7,7 @@ from validaciones import (
 )
 
 # Funciones de consultas SQL
+# Funciones para usuarios
 def obtener_datos_usuario(run, clave):
     try:
         # Validación de RUN y clave

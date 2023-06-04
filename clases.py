@@ -1,3 +1,5 @@
+from prettytable import PrettyTable
+
 # Clases de usuaros del sistema y clientes
 class Persona:
     def __init__(self, run, nombre, apellido, comuna, region):
@@ -68,7 +70,6 @@ class DatosUsuario(Persona):
             "apellido": self.get_apellido(),
             "rol": self.get_rol()
         }
-
 
 class DatosCliente(Persona):
     def __init__(self, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):
@@ -261,10 +262,7 @@ class DetalleEmpresa:
     def get_estado(self):
         return self.__estado
 
-
 # Clase carrito de compra
-from prettytable import PrettyTable
-
 class CarritoCompra:
     def __init__(self):
         self.productos = []

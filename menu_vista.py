@@ -1,4 +1,7 @@
-from validaciones import validar_numero, validar_producto
+from validaciones import (
+    validar_numero, 
+    validar_producto
+)
 from consultas import (
     obtener_datos_producto,
     buscar_producto,
@@ -36,7 +39,7 @@ def salir(mensaje):
     os.system('cls')
     print(mensaje)
 
-# Funciones de opciones Menú jefe de ventas:
+# Funciones de opciones Menú jefe de ventas:-----------------------------------------------------------------------------------------------------------------
 def opcion1():
     print("Opción 1 seleccionada")
 
@@ -46,7 +49,7 @@ def opcion2(a, b):
 def opcion3(c):
     print("Opción 3 seleccionada")
 
-# Funciones de opciones Menú vendedor
+# Funciones de opciones Menú vendedor:-----------------------------------------------------------------------------------------------------------------------
 
 # Se crea instancia de carrito de compra
 carrito = CarritoCompra()
@@ -102,6 +105,7 @@ def agregar_detalle_productos():
     # No se encontraron productos
     else:
         print("No se encontraron productos.")
+
 # Muestra una tabla si en la busqueda se encontro mas de un producto
 def mostrar_tabla_productos(productos):
     tabla = PrettyTable()
@@ -110,7 +114,7 @@ def mostrar_tabla_productos(productos):
         tabla.add_row([i, producto["codigo"], producto["nombre"]])
     print(tabla)
     
-# Funcionabilidad mostrar carrito de compra
+# Funcionabilidad mostrar detalle carrito de compra
 def ver_detalle_carrito():
     print("Opción 2 seleccionada")
     detalle_carrito = carrito.mostrar_detalle()
@@ -121,6 +125,7 @@ def ver_detalle_carrito():
         print(detalle_carrito)
         submenu_carrito()
 
+# Funcionabilidad menu carrito de compra
 def editar_carrito():
     codigo_producto = input("Ingrese el codigo del producto: ")
     nueva_cantidad = seleccionar_opcion("Ingrese la nueva cantidad: ")
@@ -138,8 +143,6 @@ def vaciar_carrito():
     carrito.vaciar_carrito()
     print("Carrito de compra Vaciado con exito")
     
-
-
 # Diccionario de opciones
 menu_jefe_ventas = {
     1: (opcion1, []),
@@ -159,6 +162,7 @@ menu_carrito = {
     2: (vaciar_carrito, []),
     3: (salir, ["Saliendo del carrito de compra"])
 }
+
 # Función para seleccionar una opción del menú o un numero
 def seleccionar_opcion(mensaje):
     while True:
@@ -227,7 +231,7 @@ def iniciar_menu_vendedor(datos_usuario):
         if opcion == 3:
             break
 
-# Función para iniciar el menú de vendedor
+# Función para iniciar el submenú de vendedor (carrito de compra)
 def submenu_carrito():
     while True:
         opciones = [
