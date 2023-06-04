@@ -32,9 +32,9 @@ def mostrar_mensaje_bienvenida(datos_usuario):
 def pausa():
     input("#### PRESIONE ENTER PARA CONTINUAR ####")
 
-def salir():
+def salir(mensaje):
     os.system('cls')
-    print("Saliendo del programa")
+    print(mensaje)
 
 # Funciones de opciones Menú jefe de ventas:
 def opcion1():
@@ -113,8 +113,32 @@ def mostrar_tabla_productos(productos):
 # Funcionabilidad mostrar carrito de compra
 def ver_detalle_carrito():
     print("Opción 2 seleccionada")
-    carrito.mostrar_detalle()
-    ### agregar submenu de opciones del carrito ### "actualizar y vaciar"
+    detalle_carrito = carrito.mostrar_detalle()
+    if detalle_carrito is None:
+        print("El carrito de compra está vacío.")
+    else:
+        os.system('cls')
+        print(detalle_carrito)
+        submenu_carrito()
+
+def editar_carrito():
+    codigo_producto = input("Ingrese el codigo del producto: ")
+    nueva_cantidad = seleccionar_opcion("Ingrese la nueva cantidad: ")
+    actualiza_cantidad = carrito.actualizar_cantidad(codigo_producto,nueva_cantidad)
+    os.system('cls')
+    detalle_carrito = carrito.mostrar_detalle()
+    print(detalle_carrito)
+    if actualiza_cantidad:
+        print("Producto actualizado con exito")
+    else:
+        print("Error al alctualizar producto")
+
+def vaciar_carrito():
+    os.system('cls')
+    carrito.vaciar_carrito()
+    print("Carrito de compra Vaciado con exito")
+    
+
 
 # Diccionario de opciones
 menu_jefe_ventas = {
@@ -127,9 +151,14 @@ menu_jefe_ventas = {
 menu_vendedor = {
     1: (agregar_detalle_productos, []),
     2: (ver_detalle_carrito, []),
-    3: (salir, [])
+    3: (salir, ["Saliendo del sistema"])
 }
 
+menu_carrito = {
+    1: (editar_carrito, []),
+    2: (vaciar_carrito, []),
+    3: (salir, ["Saliendo del carrito de compra"])
+}
 # Función para seleccionar una opción del menú o un numero
 def seleccionar_opcion(mensaje):
     while True:
@@ -197,3 +226,18 @@ def iniciar_menu_vendedor(datos_usuario):
         pausa()
         if opcion == 3:
             break
+
+# Función para iniciar el menú de vendedor
+def submenu_carrito():
+    while True:
+        opciones = [
+            ("1", "Actualizar cantidad"),
+            ("2", "vaciar carrito"),
+            ("3", "Salir")
+        ]
+        crear_tabla(opciones)
+        opcion = seleccionar_opcion("Ingrese una opción: ")
+        ejecutar_opcion(menu_carrito, opcion)
+        if opcion == 3 or opcion == 2:
+            break
+

@@ -280,12 +280,13 @@ class CarritoCompra:
         for item in self.productos:
             if item['producto'].get_codigo() == codigo_producto:
                 item['cantidad'] = nueva_cantidad
-                return
+                return True
+            else:
+                return None
 
     def mostrar_detalle(self):
         if not self.productos:
-            print("El carrito de compra está vacío.")
-            return
+            return None
 
         tabla = PrettyTable()
         tabla.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
@@ -303,7 +304,7 @@ class CarritoCompra:
 
         tabla.add_row(["", "", "", "", "Total", total_carrito])
 
-        print(tabla)
+        return tabla
 
     def vaciar_carrito(self):
         self.productos = []
