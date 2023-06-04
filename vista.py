@@ -1,5 +1,8 @@
 from consultas import obtener_datos_usuario
-from menu_vista import iniciar_menu_jefe_ventas, iniciar_menu_vendedor ,pausa
+from menu_vista import (
+    iniciar_menu_jefe_ventas, 
+    iniciar_menu_vendedor ,pausa
+)
 
 # librerias externas
 import os # para limpiar la consola
