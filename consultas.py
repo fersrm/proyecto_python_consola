@@ -97,7 +97,7 @@ def obtener_datos_producto(dato_producto):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT p.codigo_producto, p.nombre_producto, p.precio_producto, m.nombre_marca, c.nombre_categoria "
+            sql_query = ("SELECT p.id_producto, p.codigo_producto, p.nombre_producto, p.precio_producto, m.nombre_marca, c.nombre_categoria "
                         "FROM PRODUCTOS AS p "
                         "INNER JOIN MARCAS AS m "
                             "ON p.marca_FK = m.id_marca "
@@ -109,14 +109,15 @@ def obtener_datos_producto(dato_producto):
         
         # Se guardan los datos
         if datos:
-            codigo_producto = datos[0].upper()
-            nombre_producto = datos[1].upper()
-            precio_producto = datos[2]
-            marca = datos[3].upper()
-            categoria = datos[4].upper()
+            id_producto = datos[0]
+            codigo_producto = datos[1].upper()
+            nombre_producto = datos[2].upper()
+            precio_producto = datos[3]
+            marca = datos[4].upper()
+            categoria = datos[5].upper()
             
             # Se crea una instancia con los datos
-            producto = Producto(codigo_producto, nombre_producto, precio_producto, marca, categoria)
+            producto = Producto(id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria)
             return producto
 
         return None  # No se encontraron datos para el usuario especificado.
@@ -157,4 +158,41 @@ def obtener_lista_productos(dato_producto):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None
+
+# Fucion pasar cargar detalle carrito a BBDD
+def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
+    if not carrito:
+        return False  # Carrito vacío, no se puede generar la venta
+
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_create = "CREATE TEMPORARY TABLE IF NOT EXISTS detalle_temp (id_producto INTEGER, cantidad INTEGER, total_producto INTEGER)"
+            # Crea una tabla temporal en la base de datos
+            cursor.execute(sql_create)
+
+            for item in carrito:
+                producto = item['producto']
+                cantidad = item['cantidad']
+                precio_unitario = producto.get_precio()
+                total = cantidad * precio_unitario
+
+                sql_query = "INSERT INTO detalle_temp (id_producto, cantidad, total_producto) VALUES (%s, %s, %s)"
+                # Inserta los datos en la tabla temporal
+                cursor.execute(sql_query, (producto.get_id(),cantidad,total))
+
+           
+            # Llama al procedimiento almacenado
+            cursor.execute("CALL generar_venta(%s, %s, %s)", (id_cliente, id_vendedor, tipo_venta))
+            return True  # Proceso almacenado ejecutado correctamente
+
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
 

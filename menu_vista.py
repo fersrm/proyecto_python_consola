@@ -6,6 +6,7 @@ from consultas import (
     obtener_datos_producto,
     buscar_producto,
     obtener_lista_productos,
+    generar_venta
 )
 from clases import CarritoCompra
 import os
@@ -142,7 +143,23 @@ def vaciar_carrito():
     os.system('cls')
     carrito.vaciar_carrito()
     print("Carrito de compra Vaciado con exito")
-    
+
+# Funcionabilidad  generar ventas
+
+def generar_ventas(carrito):
+    compra = carrito.productos
+    #--------------------------------------------------------------------
+    id_cliente = 1 # Pedir rut del cliente si no registrarlo
+    id_vendedor = 2 # Tomarlo del incio de secion
+    tipo_venta = 2 # preguntar si es factura == 2 o boleta == 1
+    #-------------------------------------------------------------------
+    if generar_venta(compra, id_cliente, id_vendedor, tipo_venta):
+        carrito.vaciar_carrito()
+        print("venta generada con exito")
+    else:
+        print("Error al generar la venta")
+
+
 # Diccionario de opciones
 menu_jefe_ventas = {
     1: (opcion1, []),
@@ -154,7 +171,8 @@ menu_jefe_ventas = {
 menu_vendedor = {
     1: (agregar_detalle_productos, []),
     2: (ver_detalle_carrito, []),
-    3: (salir, ["Saliendo del sistema"])
+    3: (generar_ventas, [carrito]),
+    4: (salir, ["Saliendo del sistema"])
 }
 
 menu_carrito = {
@@ -221,14 +239,15 @@ def iniciar_menu_vendedor(datos_usuario):
         opciones = [
             ("1", "Registro de productos"),
             ("2", "Mostrar dellate carrito"),
-            ("3", "Salir")
+            ("3", "Generar venta"),
+            ("4", "Salir")
         ]
         
         crear_tabla(opciones)
         opcion = seleccionar_opcion("Ingrese una opción: ")
         ejecutar_opcion(menu_vendedor, opcion)
         pausa()
-        if opcion == 3:
+        if opcion == 4:
             break
 
 # Función para iniciar el submenú de vendedor (carrito de compra)

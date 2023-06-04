@@ -198,7 +198,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bazar`.`VENTAS` (
   `id_venta` INT NOT NULL AUTO_INCREMENT,
-  `fecha_emcion` DATETIME NOT NULL,
+  `fecha_emcion` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cliente_FK` INT NOT NULL,
   `usuario_FK` INT(2) NOT NULL,
   PRIMARY KEY (`id_venta`),
