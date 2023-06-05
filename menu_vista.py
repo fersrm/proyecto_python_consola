@@ -72,7 +72,7 @@ def agregar_detalle_productos():
             # Solicitar al usuario que seleccione un producto por su número
             seleccion = seleccionar_opcion("Seleccione un número de producto: ")
             if seleccion <= len(productos):
-                codigo = productos[int(seleccion) - 1]["codigo"]
+                codigo = productos[seleccion - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
                 cantidad = seleccionar_opcion("Ingrese la cantidad: ")
                 CARRITO.agregar_producto(producto_seleccionado, cantidad)
