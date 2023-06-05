@@ -130,7 +130,7 @@ def obtener_lista_productos(dato_producto):
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
             sql_query = (
-                "SELECT codigo_producto, nombre_producto "
+                "SELECT codigo_producto, nombre_producto, precio_producto  "
                 "FROM PRODUCTOS " 
                 "WHERE codigo_producto = %s OR nombre_producto LIKE %s"
             )
@@ -142,7 +142,8 @@ def obtener_lista_productos(dato_producto):
         for dato in datos:
             codigo_producto = dato[0].upper()
             nombre_producto = dato[1].upper()
-            producto = {"codigo": codigo_producto, "nombre": nombre_producto}
+            precio_producto = dato[2]
+            producto = {"codigo": codigo_producto, "nombre": nombre_producto, "precio": precio_producto}
             productos.append(producto)
         
         return productos

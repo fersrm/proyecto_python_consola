@@ -84,6 +84,12 @@ def agregar_detalle_productos():
     # Verificar si se encontró un único producto
     elif cantidad_producto == 1:
         producto = obtener_datos_producto(dato_producto)
+        # Mostrar tabla con el producto encontrado
+        mostrar_tabla_productos([{
+            "codigo": producto.get_codigo(),
+            "nombre": producto.get_nombre(),
+            "precio": producto.get_precio(),
+        }])
         if producto:
             cantidad = seleccionar_opcion("Ingrese la cantidad: ")
             CARRITO.agregar_producto(producto, cantidad)
@@ -97,9 +103,9 @@ def agregar_detalle_productos():
 # Muestra una tabla si en la busqueda se encontro mas de un producto
 def mostrar_tabla_productos(productos):
     tabla = PrettyTable()
-    tabla.field_names = ["Número", "Código Producto", "Nombre Producto"]
+    tabla.field_names = ["Número", "Código Producto", "Nombre Producto", "Precio Producto"]
     for i, producto in enumerate(productos, start=1):
-        tabla.add_row([i, producto["codigo"], producto["nombre"]])
+        tabla.add_row([i, producto["codigo"], producto["nombre"], producto["precio"]])
     print(tabla)
     
 # Funcionabilidad mostrar detalle carrito de compra
