@@ -290,12 +290,21 @@ class CarritoCompra:
         self.productos.append({'producto': producto, 'cantidad': cantidad})
 
     def actualizar_cantidad(self, codigo_producto, nueva_cantidad):
+        if nueva_cantidad < 1:
+            return False
+        
         for item in self.productos:
             if item['producto'].get_codigo() == codigo_producto:
                 item['cantidad'] = nueva_cantidad
                 return True
-            else:
-                return None
+        return False
+
+    def eliminar_producto(self, codigo_producto):
+        for item in self.productos:
+            if item['producto'].get_codigo() == codigo_producto:
+                self.productos.remove(item)
+                return True
+        return False
 
     def mostrar_detalle(self):
         if not self.productos:
