@@ -240,7 +240,7 @@ def iniciar_menu_vendedor(datos_usuario):
             ("1", "Registro de productos"),
             ("2", "Mostrar dellate carrito"),
             ("3", "Generar venta"),
-            ("4", "Salir")
+            ("4", "Salir del sistema")
         ]
         id_vendedor = datos_usuario["id"]
         
@@ -261,7 +261,7 @@ def submenu_carrito():
             ("1", "Actualizar cantidad"),
             ("2", "Quitar producto"),
             ("3", "vaciar carrito"),
-            ("4", "Salir")
+            ("4", "Salir del carrito")
         ]
         crear_tabla(opciones)
         opcion = seleccionar_opcion("Ingrese una opción: ")
