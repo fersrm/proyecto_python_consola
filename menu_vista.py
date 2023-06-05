@@ -52,8 +52,8 @@ def opcion3(c):
 
 # Funciones de opciones Menú vendedor:-----------------------------------------------------------------------------------------------------------------------
 
-# Se crea instancia de carrito de compra
-carrito = CarritoCompra()
+# Se crea instancia de carrito de compra como varible global
+CARRITO = CarritoCompra()
 # Funcionalidad para agregar productos al detalle de la compra: busca el producto y si lo encuentra, lo agrega. Si hay más de uno, se puede elegir.
 def agregar_detalle_productos():
     print("Opción 1 seleccionada")
@@ -85,7 +85,7 @@ def agregar_detalle_productos():
                 codigo = productos[int(seleccion) - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
                 cantidad = seleccionar_opcion("Ingrese la cantidad: ")
-                carrito.agregar_producto(producto_seleccionado, cantidad)
+                CARRITO.agregar_producto(producto_seleccionado, cantidad)
                 print("Producto agregado al carrito")
             else:
                 print("Selección inválida")
@@ -98,7 +98,7 @@ def agregar_detalle_productos():
 
         if producto:
             cantidad = seleccionar_opcion("Ingrese la cantidad: ")
-            carrito.agregar_producto(producto, cantidad)
+            CARRITO.agregar_producto(producto, cantidad)
             print("Producto agregado al carrito")
         else:
             print("No se encontraron datos para el producto especificado.")
@@ -118,7 +118,7 @@ def mostrar_tabla_productos(productos):
 # Funcionabilidad mostrar detalle carrito de compra
 def ver_detalle_carrito():
     print("Opción 2 seleccionada")
-    detalle_carrito = carrito.mostrar_detalle()
+    detalle_carrito = CARRITO.mostrar_detalle()
     if detalle_carrito is None:
         print("El carrito de compra está vacío.")
     else:
@@ -130,9 +130,9 @@ def ver_detalle_carrito():
 def editar_carrito():
     codigo_producto = input("Ingrese el codigo del producto: ")
     nueva_cantidad = seleccionar_opcion("Ingrese la nueva cantidad: ")
-    actualiza_cantidad = carrito.actualizar_cantidad(codigo_producto,nueva_cantidad)
+    actualiza_cantidad = CARRITO.actualizar_cantidad(codigo_producto,nueva_cantidad)
     os.system('cls')
-    detalle_carrito = carrito.mostrar_detalle()
+    detalle_carrito = CARRITO.mostrar_detalle()
     print(detalle_carrito)
     if actualiza_cantidad:
         print("Producto actualizado con exito")
@@ -141,24 +141,30 @@ def editar_carrito():
 
 def vaciar_carrito():
     os.system('cls')
-    carrito.vaciar_carrito()
+    CARRITO.vaciar_carrito()
     print("Carrito de compra Vaciado con exito")
 
 # Funcionabilidad  generar ventas
-
-def generar_ventas(carrito):
-    compra = carrito.productos
+def generar_ventas(tipo_venta):
     #--------------------------------------------------------------------
     id_cliente = 1 # Pedir rut del cliente si no registrarlo
     id_vendedor = 2 # Tomarlo del incio de secion
-    tipo_venta = 2 # preguntar si es factura == 2 o boleta == 1
     #-------------------------------------------------------------------
-    if generar_venta(compra, id_cliente, id_vendedor, tipo_venta):
-        carrito.vaciar_carrito()
+    detalle_compra = CARRITO.productos
+    if generar_venta(detalle_compra, id_cliente, id_vendedor, tipo_venta):
+        CARRITO.vaciar_carrito()
         print("venta generada con exito")
     else:
         print("Error al generar la venta")
 
+def ventas():
+    print("Opción 3 seleccionada")
+    detalle_compra = CARRITO.productos
+    if len(detalle_compra) == 0:
+        print("El carrito de compra está vacío.")
+    else:
+        os.system('cls')
+        submenu_venta()
 
 # Diccionario de opciones
 menu_jefe_ventas = {
@@ -171,7 +177,7 @@ menu_jefe_ventas = {
 menu_vendedor = {
     1: (agregar_detalle_productos, []),
     2: (ver_detalle_carrito, []),
-    3: (generar_ventas, [carrito]),
+    3: (ventas, []),
     4: (salir, ["Saliendo del sistema"])
 }
 
@@ -179,6 +185,11 @@ menu_carrito = {
     1: (editar_carrito, []),
     2: (vaciar_carrito, []),
     3: (salir, ["Saliendo del carrito de compra"])
+}
+
+menu_venta = {
+    1: (generar_ventas, [1]),
+    2: (generar_ventas, [2])
 }
 
 # Función para seleccionar una opción del menú o un numero
@@ -264,3 +275,15 @@ def submenu_carrito():
         if opcion == 3 or opcion == 2:
             break
 
+# Función para iniciar el submenú de vendedor (generar venta)
+def submenu_venta():
+    while True:
+        opciones = [
+            ("1", "Generar Bolera"),
+            ("2", "Generar Factura")
+        ]
+        crear_tabla(opciones)
+        opcion = seleccionar_opcion("Ingrese una opción: ")
+        ejecutar_opcion(menu_venta, opcion)
+        if opcion == 1 or opcion == 2:
+            break
