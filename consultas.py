@@ -22,7 +22,7 @@ def obtener_datos_usuario(run, clave):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
+            sql_query = ("SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
                         "FROM USUARIOS AS u "
                         "INNER JOIN ROLES AS rol "
                             "ON u.rol_FK = rol.id_rol "
@@ -36,17 +36,18 @@ def obtener_datos_usuario(run, clave):
         
         # Se guardan los datos
         if datos:
-            run_user = datos[0].upper()
-            clave_user = datos[1].upper()
-            nombre_user = datos[2].upper()
-            apellido_user = datos[3].upper()
-            id_rol_usur = datos[4]
-            rol_user = datos[5].upper()
-            comuna_user = datos[6].upper()
-            region_user = datos[7].upper()
+            id_user = datos[0]
+            run_user = datos[1].upper()
+            clave_user = datos[2].upper()
+            nombre_user = datos[3].upper()
+            apellido_user = datos[4].upper()
+            id_rol_usur = datos[5]
+            rol_user = datos[6].upper()
+            comuna_user = datos[7].upper()
+            region_user = datos[8].upper()
             
             # Se crea una instancia con los datos
-            user = DatosUsuario(run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
+            user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
             return user
 
         return 3  # No se encontraron datos para el usuario especificado.

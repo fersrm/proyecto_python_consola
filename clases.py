@@ -2,13 +2,20 @@ from prettytable import PrettyTable
 
 # Clases de usuaros del sistema y clientes
 class Persona:
-    def __init__(self, run, nombre, apellido, comuna, region):
+    def __init__(self,id, run, nombre, apellido, comuna, region):
+        self.__id = id
         self.__run = run
         self.__nombre = nombre
         self.__apellido = apellido
         self.__comuna = comuna
         self.__region = region
 
+    def set_id(self, id):
+        self.__id = id
+
+    def get_id(self):
+        return self.__id
+    
     def set_run(self, run):
         self.__run = run
 
@@ -40,8 +47,8 @@ class Persona:
         return self.__region
 
 class DatosUsuario(Persona):
-    def __init__(self, run, nombre, apellido, comuna, region, rol, clave, id_rol):
-        super().__init__(run, nombre, apellido, comuna, region)
+    def __init__(self,id, run, nombre, apellido, comuna, region, rol, clave, id_rol):
+        super().__init__(id, run, nombre, apellido, comuna, region)
         self.__rol = rol
         self.__clave = clave
         self.__id_rol = id_rol
@@ -66,14 +73,15 @@ class DatosUsuario(Persona):
     
     def get_datos_usuario(self):
         return {
+            "id": self.get_id(),
             "nombre": self.get_nombre(),
             "apellido": self.get_apellido(),
             "rol": self.get_rol()
         }
 
 class DatosCliente(Persona):
-    def __init__(self, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):
-        super().__init__(run, nombre, apellido, comuna, region)
+    def __init__(self,id, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):
+        super().__init__(id, run, nombre, apellido, comuna, region)
         self.__razon_social = razon_social
         self.__direccion = direccion
         self.__tipo_giro = tipo_giro
