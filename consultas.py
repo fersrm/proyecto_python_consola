@@ -22,29 +22,23 @@ def obtener_datos_usuario(run, clave):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
-                        "FROM USUARIOS AS u "
-                        "INNER JOIN ROLES AS rol "
-                            "ON u.rol_FK = rol.id_rol "
-                        "INNER JOIN COMUNAS AS c "
-                            "ON u.comuna_FK = c.id_comuna "
-                        "INNER JOIN REGIONES AS r "
-                            "ON c.region_FK = r.id_regiones "
-                        "WHERE u.run_usuario = %s AND u.clave_usuario = %s")
+            sql_query = (
+                "SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
+                "FROM USUARIOS AS u "
+                "INNER JOIN ROLES AS rol "
+                    "ON u.rol_FK = rol.id_rol "
+                "INNER JOIN COMUNAS AS c "
+                    "ON u.comuna_FK = c.id_comuna "
+                "INNER JOIN REGIONES AS r "
+                    "ON c.region_FK = r.id_regiones "
+                "WHERE u.run_usuario = %s AND u.clave_usuario = %s"
+            )
             cursor.execute(sql_query, (run, clave))
             datos = cursor.fetchone()
         
         # Se guardan los datos
         if datos:
-            id_user = datos[0]
-            run_user = datos[1].upper()
-            clave_user = datos[2].upper()
-            nombre_user = datos[3].upper()
-            apellido_user = datos[4].upper()
-            id_rol_usur = datos[5]
-            rol_user = datos[6].upper()
-            comuna_user = datos[7].upper()
-            region_user = datos[8].upper()
+            id_user, run_user, clave_user, nombre_user, apellido_user, id_rol_usur, rol_user, comuna_user, region_user = datos
             
             # Se crea una instancia con los datos
             user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
@@ -64,7 +58,7 @@ def obtener_datos_usuario(run, clave):
 def buscar_producto(dato_producto):
     try:
         # Normalizo los datos
-        # Validación de RUN y clave
+        # Validación de nombre o código de producto
         dato_producto = validar_producto(dato_producto)
         if not dato_producto:
             return False
@@ -72,9 +66,11 @@ def buscar_producto(dato_producto):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT codigo_producto, nombre_producto "
-                         "FROM PRODUCTOS " 
-                         "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            sql_query = (
+                "SELECT codigo_producto, nombre_producto "
+                "FROM PRODUCTOS " 
+                "WHERE codigo_producto = %s OR nombre_producto LIKE %s"
+            )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             resultados = cursor.fetchall()
             
@@ -98,24 +94,21 @@ def obtener_datos_producto(dato_producto):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT p.id_producto, p.codigo_producto, p.nombre_producto, p.precio_producto, m.nombre_marca, c.nombre_categoria "
-                        "FROM PRODUCTOS AS p "
-                        "INNER JOIN MARCAS AS m "
-                            "ON p.marca_FK = m.id_marca "
-                        "INNER JOIN CATEGORIAS AS c "
-                            "ON p.categoria_FK = c.id_categoria "
-                        "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            sql_query = (
+                "SELECT p.id_producto, p.codigo_producto, p.nombre_producto, p.precio_producto, m.nombre_marca, c.nombre_categoria "
+                "FROM PRODUCTOS AS p "
+                "INNER JOIN MARCAS AS m "
+                    "ON p.marca_FK = m.id_marca "
+                "INNER JOIN CATEGORIAS AS c "
+                    "ON p.categoria_FK = c.id_categoria "
+                "WHERE codigo_producto = %s OR nombre_producto LIKE %s"
+            )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             datos = cursor.fetchone()
         
-        # Se guardan los datos
+        # Se guardan los datos   
         if datos:
-            id_producto = datos[0]
-            codigo_producto = datos[1].upper()
-            nombre_producto = datos[2].upper()
-            precio_producto = datos[3]
-            marca = datos[4].upper()
-            categoria = datos[5].upper()
+            id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria = datos
             
             # Se crea una instancia con los datos
             producto = Producto(id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria)
@@ -136,9 +129,11 @@ def obtener_lista_productos(dato_producto):
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = ("SELECT codigo_producto, nombre_producto "
-                         "FROM PRODUCTOS " 
-                         "WHERE codigo_producto = %s OR nombre_producto LIKE %s")
+            sql_query = (
+                "SELECT codigo_producto, nombre_producto "
+                "FROM PRODUCTOS " 
+                "WHERE codigo_producto = %s OR nombre_producto LIKE %s"
+            )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             datos = cursor.fetchall()
         

@@ -4,11 +4,11 @@ from prettytable import PrettyTable
 class Persona:
     def __init__(self,id, run, nombre, apellido, comuna, region):
         self.__id = id
-        self.__run = run
-        self.__nombre = nombre
-        self.__apellido = apellido
-        self.__comuna = comuna
-        self.__region = region
+        self.__run = run.upper()
+        self.__nombre = nombre.upper()
+        self.__apellido = apellido.upper()
+        self.__comuna = comuna.upper()
+        self.__region = region.upper()
 
     def set_id(self, id):
         self.__id = id
@@ -49,8 +49,8 @@ class Persona:
 class DatosUsuario(Persona):
     def __init__(self,id, run, nombre, apellido, comuna, region, rol, clave, id_rol):
         super().__init__(id, run, nombre, apellido, comuna, region)
-        self.__rol = rol
-        self.__clave = clave
+        self.__rol = rol.upper()
+        self.__clave = clave.upper()
         self.__id_rol = id_rol
 
     def set_id_rol(self, id_rol):
@@ -82,9 +82,9 @@ class DatosUsuario(Persona):
 class DatosCliente(Persona):
     def __init__(self,id, run, nombre, apellido, comuna, region, razon_social, direccion, tipo_giro):
         super().__init__(id, run, nombre, apellido, comuna, region)
-        self.__razon_social = razon_social
-        self.__direccion = direccion
-        self.__tipo_giro = tipo_giro
+        self.__razon_social = razon_social.upper()
+        self.__direccion = direccion.upper()
+        self.__tipo_giro = tipo_giro.upper()
 
     def set_razon_social(self, razon_social):
         self.__razon_social = razon_social
@@ -108,11 +108,11 @@ class DatosCliente(Persona):
 class Producto:
     def __init__(self,id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria):
         self.__id = id_producto
-        self.__codigo = codigo_producto
-        self.__nombre = nombre_producto
+        self.__codigo = codigo_producto.upper()
+        self.__nombre = nombre_producto.upper()
         self.__precio = precio_producto
-        self.__marca = marca
-        self.__categoria = categoria
+        self.__marca = marca.upper()
+        self.__categoria = categoria.upper()
 
     def set_id(self, id_producto):
         self.__id = id_producto
