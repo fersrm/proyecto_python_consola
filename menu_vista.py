@@ -85,13 +85,13 @@ def agregar_detalle_productos():
     # Verificar si se encontró un único producto
     elif cantidad_producto == 1:
         producto = obtener_datos_producto(dato_producto)
-        # Mostrar tabla con el producto encontrado
-        mostrar_tabla_productos([{
-            "codigo": producto.get_codigo(),
-            "nombre": producto.get_nombre(),
-            "precio": producto.get_precio(),
-        }])
         if producto:
+            # Mostrar tabla con el producto encontrado
+            mostrar_tabla_productos([{
+                "codigo": producto.get_codigo(),
+                "nombre": producto.get_nombre(),
+                "precio": producto.get_precio(),
+            }])
             cantidad = seleccionar_opcion("Ingrese la cantidad: ")
             CARRITO.agregar_producto(producto, cantidad)
             print("----Producto agregado al carrito----")
@@ -164,9 +164,20 @@ def generar_ventas(tipo_venta, id_vendedor):
 
     id_cliente = datos_cliente.get_id()
     detalle_compra = CARRITO.productos
-    if generar_venta(detalle_compra, id_cliente, id_vendedor, tipo_venta):
+    resultado_venta = generar_venta(detalle_compra, id_cliente, id_vendedor, tipo_venta)
+
+    if resultado_venta:
         CARRITO.vaciar_carrito()
-        print("----venta generada con exito----")
+        os.system('cls')
+
+        if tipo_venta == 1:
+            tipo = "Boleta"
+        elif tipo_venta == 2:
+            # si es factura imprimir datos cliente crear metodo en cliente usando tabla
+            tipo = "Factura"
+        tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo)   
+        print(tabla_folio)
+        print(tabla_detalle)
     else:
         print("----Error al generar la venta----")
 
@@ -299,6 +310,7 @@ def submenu_carrito():
 def submenu_venta(id_vendedor):
     while True:
         os.system('cls')
+        print("#### Opción 3 seleccionada ####")
         opciones = [
             ("1", "Generar Boleta"),
             ("2", "Generar Factura")

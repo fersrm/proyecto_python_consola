@@ -1,5 +1,5 @@
 from conexion import Conexion, pymysql
-from clases import DatosUsuario, Producto, DatosCliente
+from clases import DatosUsuario, Producto, DatosCliente, DetalleVentas
 from validaciones import (
     validar_run, 
     validar_clave, 
@@ -179,10 +179,47 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
                 # Inserta los datos en la tabla temporal
                 cursor.execute(sql_query, (producto.get_id(),cantidad,total))
 
-           
             # Llama al procedimiento almacenado
-            cursor.execute("CALL generar_venta(%s, %s, %s)", (id_cliente, id_vendedor, tipo_venta))
-            return True  # Proceso almacenado ejecutado correctamente
+            cursor.callproc("generar_venta", (id_cliente, id_vendedor, tipo_venta))
+    
+            # Obtener el primer conjunto de resultados (id_compra, total_venta)
+            datos_compra = cursor.fetchone()
+
+            # Avanzar al siguiente conjunto de resultados
+            cursor.nextset()   
+
+            # Obtener el segundo conjunto de resultados (cantidad_productos, total_productos, codigo_producto, nombre_producto, precio_unitario)
+            detalle_compra = cursor.fetchall()
+
+            # Desempaquetar los datos de venta
+            id_compra, total_compra = datos_compra
+
+            # Extraer los datos del detalle de compra
+            cantidad_productos = []
+            total_productos = []
+            codigo_productos = []
+            nombre_productos = []
+            precio_unitarios = []
+
+            for fila in detalle_compra:
+                cantidad_productos.append(fila[0])
+                total_productos.append(fila[1])
+                codigo_productos.append(fila[2])
+                nombre_productos.append(fila[3])
+                precio_unitarios.append(fila[4])
+
+            # Crear una instancia de DetalleVentas con los datos
+            detalle_venta = DetalleVentas(
+                cantidad_productos,
+                total_productos,
+                id_compra,
+                total_compra,
+                codigo_productos,
+                nombre_productos,
+                precio_unitarios
+            )
+
+            return detalle_venta
 
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")

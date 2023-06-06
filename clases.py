@@ -182,18 +182,16 @@ class Ventas:
     def get_vendedor(self):
         return self.__vendedor
 
+# detalle factura o boleta (cantidad, total por producto, codigo y  nombre se guardan una lista)
 class DetalleVentas:
-    def __init__(self, id_detalle_venta, cantidad_productos, total_productos, id_venta):
-        self.__id = id_detalle_venta
+    def __init__(self, cantidad_productos, total_productos, id_compra, total_compra, codigo_producto, nombre_producto, precio_unitario):
         self.__cantidad_productos = cantidad_productos
         self.__total_productos = total_productos
-        self.__id_venta = id_venta
-
-    def set_id(self, id_detalle_venta):
-        self.__id = id_detalle_venta
-
-    def get_id(self):
-        return self.__id
+        self.__id_compra = id_compra # id boleta o factura 
+        self.__total_compra = total_compra
+        self.__codigo_producto = codigo_producto
+        self.__nombre_producto = nombre_producto
+        self.__precio_unitario = precio_unitario
 
     def set_cantidad_productos(self, cantidad_productos):
         self.__cantidad_productos = cantidad_productos
@@ -207,11 +205,54 @@ class DetalleVentas:
     def get_total_productos(self):
         return self.__total_productos
 
-    def set_id_venta(self, id_venta):
-        self.__id_venta = id_venta
+    def set_id_compra(self, id_compra):
+        self.__id_compra = id_compra
 
-    def get_id_venta(self):
-        return self.__id_venta
+    def get_id_compra(self):
+        return self.__id_compra
+
+    def set_total_compra(self, total_compra):
+        self.__total_compra = total_compra
+
+    def get_total_compra(self):
+       return self.__total_compra
+    
+    def set_codigo_producto(self, codigo_producto):
+        self.__codigo_producto = codigo_producto
+
+    def get_codigo_producto(self):
+       return self.__codigo_producto
+
+    def set_nombre_producto(self, nombre_producto):
+        self.__nombre_producto = nombre_producto
+
+    def get_nombre_producto(self):
+       return self.__nombre_producto
+    
+    def set_precio_unitario(self, precio_unitario):
+        self.__precio_unitario = precio_unitario
+
+    def get_precio_unitario(self):
+       return self.__precio_unitario
+
+    def mostrar_detalle_venta(self, tipo_venta):
+        tabla_folio = PrettyTable()
+        tabla = PrettyTable()
+
+        tabla_folio.field_names = [f"{tipo_venta} Generada con exito"]
+        tabla_folio.add_row([f"Folio: {self.get_id_compra()}"])
+
+        tabla.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
+
+        for i, (codigo, nombre, precio, cantidad, total) in enumerate(
+                zip(self.get_codigo_producto(), self.get_nombre_producto(), self.get_precio_unitario(),
+                    self.get_cantidad_productos(), self.get_total_productos()), start=1):
+
+            tabla.add_row([i, codigo, nombre, cantidad, precio, total])
+
+        tabla.add_row(["", "", "", "", "Total", self.get_total_compra()])
+
+        return tabla_folio, tabla
 
 # Clase Facturas y boleta
 class Venta:
