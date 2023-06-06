@@ -263,6 +263,9 @@ def iniciar_menu_vendedor(datos_usuario):
 # Función para iniciar el submenú de vendedor (carrito de compra)
 def submenu_carrito():
     while True:
+        carrito = CARRITO.productos
+        if not carrito:
+            break
         opciones = [
             ("1", "Actualizar cantidad"),
             ("2", "Quitar producto"),
@@ -272,8 +275,8 @@ def submenu_carrito():
         crear_tabla(opciones)
         opcion = seleccionar_opcion("Ingrese una opción: ")
         ejecutar_opcion(menu_carrito, opcion)
-        carrito = CARRITO.productos
-        if opcion == 3 or opcion == 4 or not carrito:
+
+        if opcion == 3 or opcion == 4:
             break
         else:
             pausa()
