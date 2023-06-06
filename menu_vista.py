@@ -117,7 +117,6 @@ def ver_detalle_carrito():
         print("----El carrito de compra está vacío.----")
     else:
         os.system('cls')
-        print(detalle_carrito)
         submenu_carrito()
 
 # Funcionabilidad menu carrito de compra
@@ -287,9 +286,12 @@ def iniciar_menu_vendedor(datos_usuario):
 # Función para iniciar el submenú de vendedor (carrito de compra)
 def submenu_carrito():
     while True:
+        os.system('cls')
         carrito = CARRITO.productos
         if not carrito:
             break
+        detalle_carrito = CARRITO.mostrar_detalle()
+        print(detalle_carrito)
         opciones = [
             ("1", "Actualizar cantidad"),
             ("2", "Quitar producto"),
@@ -304,7 +306,7 @@ def submenu_carrito():
             break
         else:
             pausa()
-            ver_detalle_carrito()
+            #ver_detalle_carrito()
 
 # Función para iniciar el submenú de vendedor (generar venta)
 def submenu_venta(id_vendedor):
