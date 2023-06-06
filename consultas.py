@@ -1,5 +1,5 @@
 from conexion import Conexion, pymysql
-from clases import DatosUsuario, Producto
+from clases import DatosUsuario, Producto, DatosCliente
 from validaciones import (
     validar_run, 
     validar_clave, 
@@ -156,7 +156,7 @@ def obtener_lista_productos(dato_producto):
         print(f"Error desconocido: {error}")
         return None
 
-# Fucion pasar cargar detalle carrito a BBDD
+# Fucion pasar cargar detalle carrito a BBDD y generar boleta o factura
 def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
     if not carrito:
         return False  # Carrito vacío, no se puede generar la venta
@@ -192,4 +192,47 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
 
+# Funcion para clientes
+def obtener_datos_Cliente(run):
+    try:
+        # Validación de RUN y clave
+        run = validar_run(run)
+        if not run:
+            return 1
+        
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = (
+                "SELECT cl.id_cliente, cl.run_cliente, cl.nombre_cliente, cl.apellido_cliente, e.razon_social, t.nombre_giro, cl.direccion, c.nombre_comuna, r.nombre_region "
+                "FROM CLIENTES AS cl "
+                "INNER JOIN RAZON_SOCIAL AS e "
+                    "ON cl.razon_social_FK = e.id_razon_social "
+                "INNER JOIN TIPO_GIRO AS t "
+                    "ON cl.tipo_giro_FK = t.id_giro "
+                "INNER JOIN COMUNAS AS c "
+                    "ON cl.comuna_FK = c.id_comuna "
+                "INNER JOIN REGIONES AS r "
+                    "ON c.region_FK = r.id_regiones "
+                "WHERE cl.run_cliente = %s "
+            )
+            cursor.execute(sql_query, (run))
+            datos = cursor.fetchone()
+    
+        # Se guardan los datos
+        if datos:
+            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
+            
+            # Se crea una instancia con los datos
+            cliente = DatosCliente(id_cliente, run_cliente, nombre_cliente, apellido_cliente, comuna_cliente, region_cliente, razon_social, direccion_cliente, tipo_giro)
+            return cliente
 
+        return 2  # No se encontraron datos para el usuario especificado.
+    
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return 3  # Ocurrió un error en la operación de la base de datos.
+    
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return 3  # Ocurrió un error en la operación de la base de datos.

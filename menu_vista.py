@@ -6,6 +6,7 @@ from consultas import (
     obtener_datos_producto,
     buscar_producto,
     obtener_lista_productos,
+    obtener_datos_Cliente,
     generar_venta
 )
 from clases import CarritoCompra
@@ -147,9 +148,21 @@ def eliminar_producto():
     
 # Funcionabilidad  generar ventas
 def generar_ventas(tipo_venta, id_vendedor):
-    #--------------------------------------------------------------------
-    id_cliente = 1
-    #-------------------------------------------------------------------
+    while True:
+        run_cliente = input("Ingrese el RUN del cliente: ")
+        datos_cliente = obtener_datos_Cliente(run_cliente)
+
+        if datos_cliente == 1:
+            print("----El RUN no es válido----")
+        elif datos_cliente == 2:
+            print("----No se encontraron datos para el cliente especificado----")
+            ## crear opcion para registrar al nuevo cliente ##
+        elif datos_cliente == 3:
+            print("----Ocurrió un error en la operación de la base de datos----")
+        else:
+            break
+
+    id_cliente = datos_cliente.get_id()
     detalle_compra = CARRITO.productos
     if generar_venta(detalle_compra, id_cliente, id_vendedor, tipo_venta):
         CARRITO.vaciar_carrito()
