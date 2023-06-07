@@ -112,8 +112,8 @@ def mostrar_tabla_productos(productos):
 # Funcionabilidad mostrar detalle carrito de compra
 def ver_detalle_carrito():
     print("#### Opción 2 seleccionada ####")
-    detalle_carrito = CARRITO.mostrar_detalle()
-    if detalle_carrito is None:
+    carrito = CARRITO.productos
+    if not carrito:
         print("----El carrito de compra está vacío.----")
     else:
         os.system('cls')
@@ -182,8 +182,8 @@ def generar_ventas(tipo_venta, id_vendedor):
 
 def ventas(id_vendedor):
     print("#### Opción 3 seleccionada ####")
-    detalle_compra = CARRITO.productos
-    if len(detalle_compra) == 0:
+    carrito = CARRITO.productos
+    if not carrito:
         print("----El carrito de compra está vacío.----")
     else:
         os.system('cls')
@@ -306,7 +306,6 @@ def submenu_carrito():
             break
         else:
             pausa()
-            #ver_detalle_carrito()
 
 # Función para iniciar el submenú de vendedor (generar venta)
 def submenu_venta(id_vendedor):
