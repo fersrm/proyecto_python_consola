@@ -183,11 +183,9 @@ def ejecutar_opcion_vendedor(menu, opcion, carrito, id_vendedor):
     funcion, args = menu.get(opcion, (None, None))
     if funcion:
         if opcion == 3:
-            args.clear()
-            args.extend([carrito, id_vendedor])
+            args = [carrito, id_vendedor]
         elif opcion != 4:
-            args.clear()
-            args.append(carrito)
+            args = [carrito]
         funcion(*args)
     else:
         print("----Opción no válida----")
@@ -197,7 +195,6 @@ def ejecutar_opcion_carrito(menu, opcion, carrito):
     funcion, args = menu.get(opcion, (None, None))
     if funcion:
         if opcion != 4:
-            args.clear()
             args = [carrito]
         funcion(*args)
     else:
