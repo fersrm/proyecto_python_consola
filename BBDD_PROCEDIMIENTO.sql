@@ -205,7 +205,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `bazar`.`VENTAS` (
   `id_venta` INT NOT NULL AUTO_INCREMENT,
-  `fecha_emcion` DATETIME NOT NULL,
+  `fecha_emcion` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `cliente_FK` INT NOT NULL,
   `usuario_FK` INT(2) NOT NULL,
   PRIMARY KEY (`id_venta`),
@@ -517,7 +517,10 @@ BEGIN
         TRUNCATE TABLE detalle_temp;
 
         -- Devolver la boleta creada
-        SELECT id_boleta, total_boleta FROM boletas WHERE id_boleta = id_ultima_boleta;
+        SELECT b.id_boleta, b.total_boleta, DATE(v.fecha_emcion) AS fecha_emision
+        FROM boletas AS b
+        INNER JOIN ventas AS v ON b.venta_FK = v.id_venta
+        WHERE b.id_boleta = id_ultima_boleta;
 
         -- Devolver el detalle de la boleta creada
         SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto, p.precio_producto  
@@ -543,7 +546,10 @@ BEGIN
         TRUNCATE TABLE detalle_temp;
 
         -- Devolver la factura creada
-        SELECT id_factura, total_factura FROM facturas WHERE id_factura = id_ultima_factura;
+        SELECT f.id_factura, f.total_factura, DATE(v.fecha_emcion) AS fecha_emision
+        FROM facturas AS f
+        INNER JOIN ventas AS v ON f.venta_FK = v.id_venta
+        WHERE f.id_factura = id_ultima_factura;
 
         -- Devolver el detalle de la factura creada
         SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto,p.precio_producto  

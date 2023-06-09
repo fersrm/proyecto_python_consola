@@ -240,7 +240,7 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
     if resultado_venta:
         carrito.vaciar_carrito()
         os.system('cls')
-
+        # colocar datos empresa--------
         if tipo_venta == 1:
             tipo = "Boleta"
         elif tipo_venta == 2:

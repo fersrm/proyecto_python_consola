@@ -197,7 +197,7 @@ class Ventas:
 
 # detalle factura o boleta (cantidad, total por producto, codigo y  nombre se guardan una lista)
 class DetalleVentas:
-    def __init__(self, cantidad_productos, total_productos, id_compra, total_compra, codigo_producto, nombre_producto, precio_unitario):
+    def __init__(self, cantidad_productos, total_productos, id_compra, total_compra, codigo_producto, nombre_producto, precio_unitario, fecha_venta):
         self.__cantidad_productos = cantidad_productos
         self.__total_productos = total_productos
         self.__id_compra = id_compra # id boleta o factura 
@@ -205,6 +205,7 @@ class DetalleVentas:
         self.__codigo_producto = codigo_producto
         self.__nombre_producto = nombre_producto
         self.__precio_unitario = precio_unitario
+        self.__fecha_venta = fecha_venta
 
     def set_cantidad_productos(self, cantidad_productos):
         self.__cantidad_productos = cantidad_productos
@@ -247,13 +248,16 @@ class DetalleVentas:
 
     def get_precio_unitario(self):
        return self.__precio_unitario
+    
+    def get_fecha_venta(self):
+       return self.__fecha_venta
 
     def mostrar_detalle_venta(self, tipo_venta):
         tabla_folio = PrettyTable()
         tabla = PrettyTable()
 
         tabla_folio.field_names = [f"{tipo_venta} Generada con exito"]
-        tabla_folio.add_row([f"Folio: {self.get_id_compra()}"])
+        tabla_folio.add_row([f"Folio: {self.get_id_compra()} Fecha: {self.get_fecha_venta()}"])
 
         tabla.field_names = ["Número", "Código Producto", "Nombre Producto", "Cantidad", "Precio Unitario", "Total"]
 

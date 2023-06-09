@@ -168,7 +168,7 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
             # Obtener el segundo conjunto de resultados (cantidad_productos, total_productos, codigo_producto, nombre_producto, precio_unitario)
             detalle_compra = cursor.fetchall()
             # Desempaquetar los datos de venta
-            id_compra, total_compra = datos_compra
+            id_compra, total_compra, fecha_venta = datos_compra
             # Extraer los datos del detalle de compra
             cantidad_productos = []
             total_productos = []
@@ -189,7 +189,8 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
                 total_compra,
                 codigo_productos,
                 nombre_productos,
-                precio_unitarios
+                precio_unitarios,
+                fecha_venta
             )
             return detalle_venta
 
