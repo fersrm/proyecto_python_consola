@@ -1,5 +1,5 @@
 DELIMITER $
-
+-- Procedimiento almacenado para insertar nuevo cliente
 CREATE PROCEDURE registro_cliente(
     p_run_cliente VARCHAR(10),
     p_nombre_cliente VARCHAR(25),
@@ -7,7 +7,8 @@ CREATE PROCEDURE registro_cliente(
     p_direccion VARCHAR(64),
     p_nombre_giro VARCHAR(30),
     p_razon_social VARCHAR(45),
-    p_nombre_comuna VARCHAR(30)
+    p_nombre_comuna VARCHAR(30),
+    p_id_vendedor INT
 )
 BEGIN
     DECLARE v_id_comuna INT;
@@ -45,8 +46,8 @@ BEGIN
     START TRANSACTION;
 
     -- Insertar el cliente en la tabla CLIENTES
-    INSERT INTO CLIENTES (run_cliente, nombre_cliente, apellido_cliente, direccion, comuna_FK, tipo_giro_FK, razon_social_FK)
-    VALUES (p_run_cliente, p_nombre_cliente, p_apellido_cliente, p_direccion, v_id_comuna, v_id_giro, v_id_razon_social);
+    INSERT INTO CLIENTES (run_cliente, nombre_cliente, apellido_cliente, direccion, comuna_FK, tipo_giro_FK, razon_social_FK, usuario_FK)
+    VALUES (p_run_cliente, p_nombre_cliente, p_apellido_cliente, p_direccion, v_id_comuna, v_id_giro, v_id_razon_social, p_id_vendedor);
 
     SET v_id_cliente = LAST_INSERT_ID();
 

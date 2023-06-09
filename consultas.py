@@ -287,7 +287,7 @@ def tablas_registrar_cliente():
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
     
-def insertar_cliente(datos_cliente):
+def insertar_cliente(datos_cliente, id_vendedor):
     try:
         # Desempaquetar los datos
         run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna = datos_cliente
@@ -296,7 +296,7 @@ def insertar_cliente(datos_cliente):
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
             # Llama al procedimiento almacenado utilizando execute
-            cursor.callproc("registro_cliente",(run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna))
+            cursor.callproc("registro_cliente",(run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna ,id_vendedor))
             # Obtener los resultados del procedimiento almacenado
             datos = cursor.fetchone()
             # Verificar si se obtuvieron resultados

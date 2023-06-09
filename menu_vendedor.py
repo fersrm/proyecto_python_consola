@@ -220,7 +220,7 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
             if not cliente:
                 print("----Error: No se pudo registrar al cliente. Verifique los datos ingresados.----")
             else:
-                datos_cliente = insertar_cliente(cliente)
+                datos_cliente = insertar_cliente(cliente, id_vendedor)
                 if datos_cliente:
                     print("----Cliente registrado con éxito.----")
                     break
