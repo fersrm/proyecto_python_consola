@@ -103,6 +103,19 @@ class DatosCliente(Persona):
 
     def get_tipo_giro(self):
         return self.__tipo_giro
+    
+    def mostrar_datos_cliente(self):
+        tabla = PrettyTable()
+
+        tabla.field_names = ["Datos del cliente"]
+        tabla.add_row([f"Nombre: {self.get_nombre()} {self.get_apellido()}"])
+        tabla.add_row([f"Direccion: {self.get_direccion()} Comuna: {self.get_comuna()} Region: {self.get_region()}"])
+        tabla.add_row([f"Razon Social: {self.get_razon_social()} Tipo de giro: {self.get_tipo_giro()}"])
+
+
+        return tabla
+
+
 
 # Clase de productos
 class Producto:

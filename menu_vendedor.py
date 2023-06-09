@@ -244,7 +244,8 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
         if tipo_venta == 1:
             tipo = "Boleta"
         elif tipo_venta == 2:
-            # imprimir datos del cliente
+            tabla_cliente = datos_cliente.mostrar_datos_cliente()
+            print(tabla_cliente)
             tipo = "Factura"
 
         tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo)
