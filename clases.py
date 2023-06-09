@@ -263,7 +263,7 @@ class DetalleVentas:
 
             tabla.add_row([i, codigo, nombre, cantidad, precio, total])
 
-        tabla.add_row(["", "", "", "", "Total", self.get_total_compra()])
+        tabla.add_row(["", "", "", "", "Total Neto", self.get_total_compra()])
 
         return tabla_folio, tabla
 
@@ -378,7 +378,7 @@ class CarritoCompra:
 
             tabla.add_row([i, producto.get_codigo(), producto.get_nombre(), cantidad, precio_unitario, total])
 
-        tabla.add_row(["", "", "", "", "Total", total_carrito])
+        tabla.add_row(["", "", "", "", "Total Neto", total_carrito])
 
         return tabla
 
