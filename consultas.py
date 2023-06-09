@@ -14,11 +14,9 @@ def obtener_datos_usuario(run, clave):
         run = validar_run(run)
         if not run:
             return 1
-
         clave = validar_clave(clave)
         if not clave:
             return 2
-        
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
@@ -35,21 +33,17 @@ def obtener_datos_usuario(run, clave):
             )
             cursor.execute(sql_query, (run, clave))
             datos = cursor.fetchone()
-        
+        # Verificar si se obtuvieron resultados
+        if not datos:
+            return 3  # No se encontraron datos para el usuario especificado.
         # Se guardan los datos
-        if datos:
-            id_user, run_user, clave_user, nombre_user, apellido_user, id_rol_usur, rol_user, comuna_user, region_user = datos
-            
-            # Se crea una instancia con los datos
-            user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
-            return user
-
-        return 3  # No se encontraron datos para el usuario especificado.
-    
+        id_user, run_user, clave_user, nombre_user, apellido_user, id_rol_usur, rol_user, comuna_user, region_user = datos
+        # Se crea una instancia con los datos
+        user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
+        return user
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return 4  # Ocurrió un error en la operación de la base de datos.
-    
     except Exception as error:
         print(f"Error desconocido: {error}")
         return 4  # Ocurrió un error en la operación de la base de datos.
@@ -57,12 +51,10 @@ def obtener_datos_usuario(run, clave):
 # Funciones para productos
 def buscar_producto(dato_producto):
     try:
-        # Normalizo los datos
         # Validación de nombre o código de producto
         dato_producto = validar_producto(dato_producto)
         if not dato_producto:
             return False
-        
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
@@ -73,18 +65,14 @@ def buscar_producto(dato_producto):
             )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             resultados = cursor.fetchall()
-            
-            # Verificar si se encontraron resultados
+            # Verificar si se obtuvieron resultados
             cantidad_productos = len(resultados)
             if cantidad_productos > 0:
                 return cantidad_productos
-
         return False  # No se encontró el producto.
-    
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
-    
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
@@ -105,21 +93,17 @@ def obtener_datos_producto(dato_producto):
             )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             datos = cursor.fetchone()
-        
+        # Verificar si se obtuvieron resultados    
+        if not datos:
+            return None  # No se encontraron datos para el usuario especificado.
         # Se guardan los datos   
-        if datos:
-            id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria = datos
-            
-            # Se crea una instancia con los datos
-            producto = Producto(id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria)
-            return producto
-
-        return None  # No se encontraron datos para el usuario especificado.
-    
+        id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria = datos
+        # Se crea una instancia con los datos
+        producto = Producto(id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria)
+        return producto
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
-    
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
@@ -136,7 +120,9 @@ def obtener_lista_productos(dato_producto):
             )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             datos = cursor.fetchall()
-        
+        # Verificar si se obtuvieron resultados
+        if not datos:
+            return None    
         # Se guardan los datos en una lista de diccionarios
         productos = []
         for dato in datos:
@@ -145,13 +131,10 @@ def obtener_lista_productos(dato_producto):
             precio_producto = dato[2]
             producto = {"codigo": codigo_producto, "nombre": nombre_producto, "precio": precio_producto}
             productos.append(producto)
-        
-        return productos
-    
+        return productos 
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return None
-    
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None
@@ -160,7 +143,6 @@ def obtener_lista_productos(dato_producto):
 def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
     if not carrito:
         return False  # Carrito vacío, no se puede generar la venta
-
     try:
         # Consulta a la base de datos
         with Conexion() as conexion:
@@ -168,7 +150,6 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
             sql_create = "CREATE TEMPORARY TABLE IF NOT EXISTS detalle_temp (id_producto INTEGER, cantidad INTEGER, total_producto INTEGER)"
             # Crea una tabla temporal en la base de datos
             cursor.execute(sql_create)
-
             for item in carrito:
                 producto = item['producto']
                 cantidad = item['cantidad']
@@ -178,36 +159,28 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
                 sql_query = "INSERT INTO detalle_temp (id_producto, cantidad, total_producto) VALUES (%s, %s, %s)"
                 # Inserta los datos en la tabla temporal
                 cursor.execute(sql_query, (producto.get_id(),cantidad,total))
-
             # Llama al procedimiento almacenado
             cursor.callproc("generar_venta", (id_cliente, id_vendedor, tipo_venta))
-    
             # Obtener el primer conjunto de resultados (id_compra, total_venta)
             datos_compra = cursor.fetchone()
-
             # Avanzar al siguiente conjunto de resultados
             cursor.nextset()   
-
             # Obtener el segundo conjunto de resultados (cantidad_productos, total_productos, codigo_producto, nombre_producto, precio_unitario)
             detalle_compra = cursor.fetchall()
-
             # Desempaquetar los datos de venta
             id_compra, total_compra = datos_compra
-
             # Extraer los datos del detalle de compra
             cantidad_productos = []
             total_productos = []
             codigo_productos = []
             nombre_productos = []
             precio_unitarios = []
-
             for fila in detalle_compra:
                 cantidad_productos.append(fila[0])
                 total_productos.append(fila[1])
                 codigo_productos.append(fila[2])
                 nombre_productos.append(fila[3])
                 precio_unitarios.append(fila[4])
-
             # Crear una instancia de DetalleVentas con los datos
             detalle_venta = DetalleVentas(
                 cantidad_productos,
@@ -218,7 +191,6 @@ def generar_venta(carrito, id_cliente, id_vendedor, tipo_venta):
                 nombre_productos,
                 precio_unitarios
             )
-
             return detalle_venta
 
     except pymysql.err.Error as error:
@@ -236,7 +208,6 @@ def obtener_datos_Cliente(run):
         run = validar_run(run)
         if not run:
             return 1
-        
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
@@ -255,21 +226,27 @@ def obtener_datos_Cliente(run):
             )
             cursor.execute(sql_query, (run))
             datos = cursor.fetchone()
-    
+        # Verificar si se obtuvieron resultados
+        if not datos:
+            return 2  # No se encontraron datos para el usuario especificado.
         # Se guardan los datos
-        if datos:
-            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
-            
-            # Se crea una instancia con los datos
-            cliente = DatosCliente(id_cliente, run_cliente, nombre_cliente, apellido_cliente, comuna_cliente, region_cliente, razon_social, direccion_cliente, tipo_giro)
-            return cliente
-
-        return 2  # No se encontraron datos para el usuario especificado.
-    
+        id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
+        # Se crea una instancia con los datos
+        cliente = DatosCliente(
+            id_cliente, 
+            run_cliente, 
+            nombre_cliente, 
+            apellido_cliente, 
+            comuna_cliente, 
+            region_cliente, 
+            razon_social, 
+            direccion_cliente, 
+            tipo_giro
+        )
+        return cliente
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return 3  # Ocurrió un error en la operación de la base de datos.
-    
     except Exception as error:
         print(f"Error desconocido: {error}")
         return 3  # Ocurrió un error en la operación de la base de datos.
@@ -321,14 +298,24 @@ def insertar_cliente(datos_cliente):
             # Llama al procedimiento almacenado utilizando execute
             cursor.callproc("registro_cliente",(run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna))
             # Obtener los resultados del procedimiento almacenado
-            results = cursor.fetchone()
+            datos = cursor.fetchone()
             # Verificar si se obtuvieron resultados
-            if not results:
+            if not datos:
                 return None
             # Obtener los datos del cliente
-            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = results
+            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
             # Se crea una instancia con los datos
-            nuevo_cliente = DatosCliente(id_cliente, run_cliente, nombre_cliente, apellido_cliente, comuna_cliente, region_cliente, razon_social, direccion_cliente, tipo_giro)
+            nuevo_cliente = DatosCliente(
+                id_cliente, 
+                run_cliente, 
+                nombre_cliente, 
+                apellido_cliente, 
+                comuna_cliente, 
+                region_cliente, 
+                razon_social, 
+                direccion_cliente, 
+                tipo_giro
+            )
             return nuevo_cliente
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")

@@ -37,7 +37,6 @@ def agregar_detalle_productos(carrito):
     if not dato_producto:
         print("----El producto ingresado no es válido----")
         return False
-
     cantidad_producto = buscar_producto(dato_producto)
     # Verificar si se encontraron múltiples productos
     if cantidad_producto > 1:
@@ -143,18 +142,18 @@ def mostrar_tabla_clienta(descripcion, datos):
 
 def traer_datos_tabla_cliente():
     tipo_griro, razon_socail, comunas =  tablas_registrar_cliente()
-
+    # se nuestra la tabla de tipos de giro
     mostrar_tabla_clienta("Tipo de giro", tipo_griro)
     seleccion_giro = selecionar_tabla("Tipo de giro", tipo_griro)
     print(seleccion_giro)
-
+    # se nuestra la tabla de razon social si es necesario
     seleccion_razon = "NO TIENE"
     seleccionar_razon_social = input("¿Desea seleccionar una razón social? (s/n): ")
     if seleccionar_razon_social.lower() == "s":
         mostrar_tabla_clienta("Razon social", razon_socail)
         seleccion_razon = selecionar_tabla("Razon social", razon_socail)
         print(seleccion_razon)
-    
+    # se nuestra la tabla de las comunas
     mostrar_tabla_clienta("Comuna", comunas)
     seleccion_comuna = selecionar_tabla("Comuna", comunas)
     print(seleccion_comuna)
@@ -169,7 +168,6 @@ def selecionar_tabla(descripcion, elemnto_tabla):
                 dato = input("Ingresa la Razon social: ")
                 dato = validar_razon_social(dato)
                 return dato
-
         seleccion = seleccionar_opcion("Seleccione un número de la tabla: ")
         if not seleccion <= len(elemnto_tabla):
             print("----Selecion inválida----")
@@ -203,9 +201,7 @@ def registrar_cliente(run_cliente):
             print("----Dirección inválida. Inténtelo nuevamente.----")
 
     giro, razon, comuna = traer_datos_tabla_cliente()
-
     datos_cliente = [run_cliente, nombre, apellido, direccion, giro, razon, comuna]
-
     return datos_cliente
 
 # Funcionabilidad  generar ventas (Submenu_venta)
@@ -213,13 +209,13 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
     while True:
         run_cliente = input("Ingrese el RUN del cliente: ")
         datos_cliente = obtener_datos_Cliente(run_cliente)
-
+        # Resultado consulta, pide registro de cliente si no esta en la BBDD
         if datos_cliente == 1:
             print("----El RUN no es válido----")
         elif datos_cliente == 2:
             os.system('cls')
             print("----No se encontraron datos para el cliente especificado----")
-            print("-----------Comenzando con el registro del Cliente-----------")# ver si preguntar
+            print("-----------Comenzando con el registro del Cliente-----------")# ver si preguntar o de forma directa
             cliente = registrar_cliente(run_cliente)
             if not cliente:
                 print("----Error: No se pudo registrar al cliente. Verifique los datos ingresados.----")
@@ -236,11 +232,11 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
             return
         else:
             break
-
+    # Cuando ya se tiene la instancia del cliente se procese con la venta
     id_cliente = datos_cliente.get_id()
     detalle_compra = carrito.productos
     resultado_venta = generar_venta(detalle_compra, id_cliente, id_vendedor, tipo_venta)
-
+    # se imprime la boleta o factura y se vacea el carrito
     if resultado_venta:
         carrito.vaciar_carrito()
         os.system('cls')

@@ -40,11 +40,9 @@ def seleccionar_opcion(mensaje):
 # Función para crear una tabla de opciones para los menu
 def crear_tabla(opciones):
     # definir los encabezados
-    table = PrettyTable(["Opción", "Descripción"])
-    
+    table = PrettyTable(["Opción", "Descripción"])   
     # Agregar filas a la tabla
     for opcion, descripcion in opciones:
-        table.add_row([opcion, descripcion])
-    
+        table.add_row([opcion, descripcion])   
     # Mostrar la tabla en la consola
     print(table)
