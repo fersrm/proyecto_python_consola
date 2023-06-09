@@ -1,10 +1,17 @@
-from validaciones import validar_producto
+from validaciones import (
+    validar_producto,
+    validar_cliente,
+    validar_direccion,
+    validar_razon_social
+)
 from consultas import (
     obtener_datos_producto,
     buscar_producto,
     obtener_lista_productos,
     obtener_datos_Cliente,
-    generar_venta
+    generar_venta,
+    tablas_registrar_cliente,
+    insertar_cliente
 )
 from opciones_menu import (
     mostrar_mensaje_bienvenida,
@@ -126,6 +133,81 @@ def vaciar_carrito(carrito):
     carrito.vaciar_carrito()
     print("----Carrito de compra Vaciado con exito----")
     
+# Funcionabilidad registrar cliente
+def mostrar_tabla_clienta(descripcion, datos):
+    tabla = PrettyTable()
+    tabla.field_names = ["Número", descripcion]
+    for i, dato in enumerate(datos, start=1):
+        tabla.add_row([i, dato[0]])
+    print(tabla)
+
+def traer_datos_tabla_cliente():
+    tipo_griro, razon_socail, comunas =  tablas_registrar_cliente()
+
+    mostrar_tabla_clienta("Tipo de giro", tipo_griro)
+    seleccion_giro = selecionar_tabla("Tipo de giro", tipo_griro)
+    print(seleccion_giro)
+
+    seleccion_razon = "NO TIENE"
+    seleccionar_razon_social = input("¿Desea seleccionar una razón social? (s/n): ")
+    if seleccionar_razon_social.lower() == "s":
+        mostrar_tabla_clienta("Razon social", razon_socail)
+        seleccion_razon = selecionar_tabla("Razon social", razon_socail)
+        print(seleccion_razon)
+    
+    mostrar_tabla_clienta("Comuna", comunas)
+    seleccion_comuna = selecionar_tabla("Comuna", comunas)
+    print(seleccion_comuna)
+
+    return seleccion_giro, seleccion_razon , seleccion_comuna
+
+def selecionar_tabla(descripcion, elemnto_tabla):
+    while True:
+        if descripcion == "Razon social":
+            respuesta = input("Pertenece a otra : Razon social. (s/n): ")
+            if respuesta.lower() == "s":
+                dato = input("Ingresa la Razon social: ")
+                dato = validar_razon_social(dato)
+                return dato
+
+        seleccion = seleccionar_opcion("Seleccione un número de la tabla: ")
+        if not seleccion <= len(elemnto_tabla):
+            print("----Selecion inválida----")
+        else:
+            dato = elemnto_tabla[seleccion - 1][0]
+            return dato
+
+def registrar_cliente(run_cliente):
+    while True:
+        nombre = input("Ingrese el nombre del cliente: ")
+        nombre = validar_cliente(nombre)
+        if nombre:
+            break
+        else:
+            print("----Nombre inválido. Inténtelo nuevamente.----")
+
+    while True:
+        apellido = input("Ingrese el apellido del cliente: ")
+        apellido = validar_cliente(apellido)
+        if apellido:
+            break
+        else:
+            print("----Apellido inválido. Inténtelo nuevamente.----")
+
+    while True:
+        direccion = input("Ingrese la dirección del cliente: ")
+        direccion = validar_direccion(direccion)
+        if direccion:
+            break
+        else:
+            print("----Dirección inválida. Inténtelo nuevamente.----")
+
+    giro, razon, comuna = traer_datos_tabla_cliente()
+
+    datos_cliente = [run_cliente, nombre, apellido, direccion, giro, razon, comuna]
+
+    return datos_cliente
+
 # Funcionabilidad  generar ventas (Submenu_venta)
 def generar_ventas(tipo_venta, id_vendedor, carrito):
     while True:
@@ -135,10 +217,23 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
         if datos_cliente == 1:
             print("----El RUN no es válido----")
         elif datos_cliente == 2:
+            os.system('cls')
             print("----No se encontraron datos para el cliente especificado----")
-            ## crear opcion para registrar al nuevo cliente ##
+            print("-----------Comenzando con el registro del Cliente-----------")# ver si preguntar
+            cliente = registrar_cliente(run_cliente)
+            if not cliente:
+                print("----Error: No se pudo registrar al cliente. Verifique los datos ingresados.----")
+            else:
+                datos_cliente = insertar_cliente(cliente)
+                if datos_cliente:
+                    print("----Cliente registrado con éxito.----")
+                    break
+                else:
+                    print("----Error: No se pudo insertar el cliente en la base de datos.----")
+                    return
         elif datos_cliente == 3:
             print("----Ocurrió un error en la operación de la base de datos----")
+            return
         else:
             break
 
@@ -153,13 +248,14 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
         if tipo_venta == 1:
             tipo = "Boleta"
         elif tipo_venta == 2:
-            # si es factura imprimir datos cliente crear metodo en cliente usando tabla
+            # imprimir datos del cliente
             tipo = "Factura"
-        tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo)   
+
+        tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo)
         print(tabla_folio)
         print(tabla_detalle)
     else:
-        print("----Error al generar la venta----")
+        print("----Error al generar la venta. Inténtelo nuevamente.----")
 
 ## Diccionario de opciones ##------------------------------------------------------------------------------------------------------
 

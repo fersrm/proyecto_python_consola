@@ -273,3 +273,66 @@ def obtener_datos_Cliente(run):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return 3  # Ocurrió un error en la operación de la base de datos.
+
+# Funcion Registrar cliente
+def tablas_registrar_cliente():
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            # Llama al procedimiento almacenado
+            cursor.callproc("traer_tablas_cliente", ())
+            # Obtener el primer conjunto de resultados (Tipo de giro)
+            datos_tipo_giro = cursor.fetchall()
+            # Avanzar al siguiente conjunto de resultados
+            cursor.nextset()   
+            # Obtener el segundo conjunto de resultados (razon social)
+            datos_razon_social = cursor.fetchall()
+            # Avanzar al siguiente conjunto de resultados
+            cursor.nextset()   
+            # Obtener el tercer conjunto de resultados (Tipo de giro)
+            datos_comunas = cursor.fetchall()
+        # Desempaquetar los datos de venta
+        tipo_giro = []
+        for fila in datos_tipo_giro:
+            tipo_giro.append(fila)
+        razon_social = []
+        for fila in datos_razon_social:
+            razon_social.append(fila)
+        comunas = []
+        for fila in datos_comunas:
+            comunas.append(fila)
+        return tipo_giro, razon_social , comunas
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    
+def insertar_cliente(datos_cliente):
+    try:
+        # Desempaquetar los datos
+        run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna = datos_cliente
+        print(datos_cliente)
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            # Llama al procedimiento almacenado utilizando execute
+            cursor.callproc("registro_cliente",(run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna))
+            # Obtener los resultados del procedimiento almacenado
+            results = cursor.fetchone()
+            # Verificar si se obtuvieron resultados
+            if not results:
+                return None
+            # Obtener los datos del cliente
+            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = results
+            # Se crea una instancia con los datos
+            nuevo_cliente = DatosCliente(id_cliente, run_cliente, nombre_cliente, apellido_cliente, comuna_cliente, region_cliente, razon_social, direccion_cliente, tipo_giro)
+            return nuevo_cliente
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error desconocido en la operación de la base de datos.
