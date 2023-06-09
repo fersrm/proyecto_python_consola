@@ -2,7 +2,6 @@ from validaciones import validar_numero
 import os
 from prettytable import PrettyTable
 
-
 ## Funciones generales menu ##
 def mostrar_mensaje_bienvenida(datos_usuario):
     # Crear la tabla
