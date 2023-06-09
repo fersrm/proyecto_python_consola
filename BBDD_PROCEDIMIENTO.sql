@@ -486,7 +486,7 @@ INSERT INTO `bazar`.`DETALLE_BOLETAS` (`cantidad`, `total`, `producto_FK`, `bole
 -- Procedimiento almacenado para generar una venta, boleta o factura
 -- -----------------------------------------------------
 DELIMITER $
-
+-- Procedimiento almacenado para generar una venta, boleta o factura
 CREATE PROCEDURE generar_venta(id_cliente INT, id_vendedor INT, generar_venta INT)
 BEGIN
     -- Declaracion de Variables
@@ -520,7 +520,7 @@ BEGIN
         SELECT id_boleta, total_boleta FROM boletas WHERE id_boleta = id_ultima_boleta;
 
         -- Devolver el detalle de la boleta creada
-        SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto, p.nombre_producto,p.precio_producto  
+        SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto, p.precio_producto  
         FROM detalle_boletas AS d
         INNER JOIN productos AS p
         ON d.producto_FK = p.id_producto
@@ -546,7 +546,7 @@ BEGIN
         SELECT id_factura, total_factura FROM facturas WHERE id_factura = id_ultima_factura;
 
         -- Devolver el detalle de la factura creada
-        SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto, p.nombre_producto,p.precio_producto  
+        SELECT d.cantidad, d.total, p.codigo_producto, p.nombre_producto,p.precio_producto  
         FROM detalle_facturas AS d
         INNER JOIN productos AS p
         ON d.producto_FK = p.id_producto
