@@ -11,7 +11,8 @@ from consultas import (
     obtener_datos_Cliente,
     generar_venta,
     tablas_registrar_cliente,
-    insertar_cliente
+    insertar_cliente,
+    obtener_datos_empresa
 )
 from opciones_menu import (
     mostrar_mensaje_bienvenida,
@@ -297,8 +298,18 @@ def ejecutar_opcion_carrito(menu, opcion, carrito):
 def iniciar_menu_vendedor(datos_usuario):
     carrito = CarritoCompra()
     while True:
+        datos_local = obtener_datos_empresa()
+        if datos_local:
+            estado_dia = datos_local.get_estado()
+        else:
+            print("No se ecnontraron datos del local")
         os.system('cls')
+
         mostrar_mensaje_bienvenida(datos_usuario)
+        if estado_dia != 1:
+            print("----El local se encuentra cerrado----")
+            break
+
         opciones = [
             ("1", "Registro de productos"),  # pasar carrito
             ("2", "Mostrar detalle carrito"),  # pasar carrito
