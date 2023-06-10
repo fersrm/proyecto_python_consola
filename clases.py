@@ -115,8 +115,6 @@ class DatosCliente(Persona):
 
         return tabla
 
-
-
 # Clase de productos
 class Producto:
     def __init__(self,id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria):
@@ -298,12 +296,16 @@ class Venta:
 
 # Clase de datos de la empresa
 class DetalleEmpresa:
-    def __init__(self, nombre_local, rut_local, direccion, IVA, estado):
+    def __init__(self,id_local, nombre_local, rut_local, direccion, IVA, estado):
+        self.__id_local = id_local
         self.__nombre_local = nombre_local
         self.__rut_local = rut_local
         self.__direccion = direccion
         self.__IVA = IVA
-        self.__estado = estado
+        self.__estado = estado    
+        
+    def get_id_local(self):
+        return self.__id_local
 
     def set_nombre_local(self, nombre_local):
         self.__nombre_local = nombre_local
@@ -334,6 +336,15 @@ class DetalleEmpresa:
 
     def get_estado(self):
         return self.__estado
+    
+    def mostrar_datos_empresa(self):
+        tabla = PrettyTable()
+
+        tabla.field_names = ["Datos del Local"]
+        tabla.add_row([f"Nombre: {self.get_nombre_local()} RUT: {self.get_rut_local()}"])
+        tabla.add_row([f"Direccion: {self.get_direccion()}"])
+
+        return tabla
 
 # Clase carrito de compra
 class CarritoCompra:

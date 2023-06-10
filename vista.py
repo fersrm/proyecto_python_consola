@@ -1,4 +1,4 @@
-from consultas import obtener_datos_usuario
+from consultas import obtener_datos_usuario, obtener_datos_empresa
 from opciones_menu import pausa
 from menu_jefe_venta import iniciar_menu_jefe_ventas 
 from menu_vendedor import iniciar_menu_vendedor
@@ -14,9 +14,19 @@ def login():
 
 # Funcion para inciar el menu segun corresponda
 def iniciar_aplicacion():
+    datos_local = obtener_datos_empresa()
     while True:
         os.system('cls')
-
+        # login y datos del bazar
+        print("""
+         //////////////////
+        /////  LOGIN  ////
+       ////////////////// 
+        """)
+        if datos_local:
+            print(datos_local.mostrar_datos_empresa())
+        else:
+            print("No se ecnontraron datos del local")
         user, clave = login()
         if user and clave:
             datos = obtener_datos_usuario(user, clave)

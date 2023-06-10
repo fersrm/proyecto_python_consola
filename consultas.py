@@ -1,5 +1,5 @@
 from conexion import Conexion, pymysql
-from clases import DatosUsuario, Producto, DatosCliente, DetalleVentas
+from clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
 from validaciones import (
     validar_run, 
     validar_clave, 
@@ -324,3 +324,30 @@ def insertar_cliente(datos_cliente, id_vendedor):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error desconocido en la operación de la base de datos.
+
+# Funcion para obtener datos generales de la empresa
+def obtener_datos_empresa():
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = (
+                "SELECT id_datos_empresa, nombre_empresa, rut_empresa, direccion_empresa, estado , IVA "
+                "FROM datos_empresa WHERE id_datos_empresa = 1 "
+            )
+            cursor.execute(sql_query)
+            datos = cursor.fetchone()
+        # Verificar si se obtuvieron resultados    
+        if not datos:
+            return None  # No se encontraron datos.
+        # Se guardan los datos   
+        id_local, nombre_local, rut_local, direccion_local, estado , IVA = datos
+        # Se crea una instancia con los datos
+        datos_local = DetalleEmpresa(id_local, nombre_local, rut_local, direccion_local, IVA, estado)
+        return datos_local
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
