@@ -298,12 +298,13 @@ def ejecutar_opcion_carrito(menu, opcion, carrito):
 def iniciar_menu_vendedor(datos_usuario):
     carrito = CarritoCompra()
     while True:
+        os.system('cls')
+        
         datos_local = obtener_datos_empresa()
         if datos_local:
             estado_dia = datos_local.get_estado()
         else:
             print("No se ecnontraron datos del local")
-        os.system('cls')
 
         mostrar_mensaje_bienvenida(datos_usuario)
         if estado_dia != 1:
