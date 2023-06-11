@@ -1,6 +1,6 @@
 from conexion.conexion import Conexion, pymysql
-from clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
-from validaciones import (
+from controlador.clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
+from controlador.validaciones import (
     validar_run, 
     validar_clave, 
     validar_producto

@@ -14,7 +14,7 @@ from controlador.consultas import (
     insertar_cliente,
     obtener_datos_empresa
 )
-from opciones_menu import (
+from menus_vista.opciones_menu import (
     mostrar_mensaje_bienvenida,
     pausa,
     salir,
