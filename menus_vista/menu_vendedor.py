@@ -1,10 +1,10 @@
-from validaciones import (
+from controlador.validaciones import (
     validar_producto,
     validar_cliente,
     validar_direccion,
     validar_razon_social
 )
-from consultas import (
+from controlador.consultas import (
     obtener_datos_producto,
     buscar_producto,
     obtener_lista_productos,
@@ -21,7 +21,7 @@ from opciones_menu import (
     seleccionar_opcion,
     crear_tabla
 )
-from clases import CarritoCompra
+from controlador.clases import CarritoCompra
 import os
 from prettytable import PrettyTable
 

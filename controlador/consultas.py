@@ -1,4 +1,4 @@
-from conexion import Conexion, pymysql
+from conexion.conexion import Conexion, pymysql
 from clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
 from validaciones import (
     validar_run, 

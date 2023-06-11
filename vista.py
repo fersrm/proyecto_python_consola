@@ -1,7 +1,7 @@
-from consultas import obtener_datos_usuario, obtener_datos_empresa
-from opciones_menu import pausa
-from menu_jefe_venta import iniciar_menu_jefe_ventas 
-from menu_vendedor import iniciar_menu_vendedor
+from controlador.consultas import obtener_datos_usuario, obtener_datos_empresa
+from menus_vista.opciones_menu import pausa
+from menus_vista.menu_jefe_venta import iniciar_menu_jefe_ventas 
+from menus_vista.menu_vendedor import iniciar_menu_vendedor
 
 # librerias externas
 import os # para limpiar la consola

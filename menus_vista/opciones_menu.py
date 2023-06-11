@@ -1,4 +1,4 @@
-from validaciones import validar_numero
+from controlador.validaciones import validar_numero
 import os
 from prettytable import PrettyTable
 
