@@ -339,7 +339,7 @@ INSERT INTO `bazar`.`ROLES` (`rol_usuario`) VALUES
 INSERT INTO `bazar`.`REGIONES` (`nombre_region`) VALUES
 ('BIOBIO'),
 ('ÑUBLE'),
-('CONCEPCIÓN'),
+('METROPOLITANA'),
 ('MAULE'),
 ('ARAUCANÍA');
 -- -----------------------------------------------------
@@ -349,13 +349,13 @@ INSERT INTO `bazar`.`COMUNAS` (`nombre_comuna`, `region_FK`) VALUES
 ('CONCEPCION', 1),
 ('LOS ANGELES', 1),
 ('CHILLAN', 2),
-('TEMUCO', 2),
-('PUERTO MONTT', 3),
-('VALDIVIA', 3),
-('VINA DEL MAR', 4),
-('VALPARAISO', 4),
-('SANTIAGO', 5),
-('RANCAGUA', 5);
+('CHILLAN VIEJO', 2),
+('SANTIAGO', 3),
+('HUECHURABA', 3),
+('PARRAL', 4),
+('CURICO', 4),
+('LAUTARO', 5),
+('PUCON', 5);
 -- -----------------------------------------------------
 -- Insert Usuarios
 -- -----------------------------------------------------
