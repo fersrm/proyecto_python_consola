@@ -482,3 +482,8 @@ INSERT INTO `bazar`.`DETALLE_BOLETAS` (`cantidad`, `total`, `producto_FK`, `bole
 (2,(29990 * 2) , 1, 4),
 (5,(10990 * 5) , 2, 5),
 (2,(11990 * 2) , 3, 5);
+-- -----------------------------------------------------
+-- Insert Datos del local
+-- -----------------------------------------------------
+INSERT INTO `bazar`.`DATOS_EMPRESA` (`nombre_empresa`, `rut_empresa`, `direccion_empresa`, `IVA`, `estado`) VALUES 
+('MONA','99888777-6','MONITAS321', 19, 1);

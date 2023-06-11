@@ -108,7 +108,7 @@ class DatosCliente(Persona):
         tabla = PrettyTable()
 
         tabla.field_names = ["Datos del cliente"]
-        tabla.add_row([f"Nombre: {self.get_nombre()} {self.get_apellido()}"])
+        tabla.add_row([f"Nombre: {self.get_nombre()} {self.get_apellido()} RUN: {self.get_run()}"])
         tabla.add_row([f"Direccion: {self.get_direccion()} Comuna: {self.get_comuna()} Region: {self.get_region()}"])
         tabla.add_row([f"Razon Social: {self.get_razon_social()} Tipo de giro: {self.get_tipo_giro()}"])
 
@@ -250,7 +250,7 @@ class DetalleVentas:
     def get_fecha_venta(self):
        return self.__fecha_venta
 
-    def mostrar_detalle_venta(self, tipo_venta):
+    def mostrar_detalle_venta(self, tipo_venta, IVA):
         tabla_folio = PrettyTable()
         tabla = PrettyTable()
 
@@ -264,8 +264,12 @@ class DetalleVentas:
                     self.get_cantidad_productos(), self.get_total_productos()), start=1):
 
             tabla.add_row([i, codigo, nombre, cantidad, precio, total])
+        
+        subtotal = self.get_total_compra()
+        total_iva = round((subtotal * IVA) / 100, 2)
+        total_neto = round(subtotal - total_iva, 2)
 
-        tabla.add_row(["", "", "", "", "Total Neto", self.get_total_compra()])
+        tabla.add_row(["Total Neto: ", total_neto, f"IVA: {IVA}% ", total_iva, "Sub Total: ", subtotal])
 
         return tabla_folio, tabla
 
@@ -393,7 +397,7 @@ class CarritoCompra:
 
             tabla.add_row([i, producto.get_codigo(), producto.get_nombre(), cantidad, precio_unitario, total])
 
-        tabla.add_row(["", "", "", "", "Total Neto", total_carrito])
+        tabla.add_row(["", "", "", "", "Sub Total: ", total_carrito])
 
         return tabla
 

@@ -94,13 +94,13 @@ def ver_detalle_carrito(carrito):
         submenu_carrito(carrito)
 
 # Funcionabilidad para generar selecionar boleta o factura llama submenu venta
-def ventas(carrito,id_vendedor):
+def ventas(carrito, id_vendedor, datos_local):
     print("#### Opción 3 seleccionada ####")
     if not carrito.productos:
         print("----El carrito de compra está vacío.----")
     else:
         os.system('cls')
-        submenu_venta(id_vendedor,carrito)
+        submenu_venta(id_vendedor, carrito , datos_local)
 
 ## Funciones de los Submenu ##--------------------------------------------------------------------------------------------------
 
@@ -206,7 +206,7 @@ def registrar_cliente(run_cliente):
     return datos_cliente
 
 # Funcionabilidad  generar ventas (Submenu_venta)
-def generar_ventas(tipo_venta, id_vendedor, carrito):
+def generar_ventas(tipo_venta, id_vendedor, carrito, datos_local):
     while True:
         run_cliente = input("Ingrese el RUN del cliente: ")
         datos_cliente = obtener_datos_Cliente(run_cliente)
@@ -241,7 +241,13 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
     if resultado_venta:
         carrito.vaciar_carrito()
         os.system('cls')
-        # colocar datos empresa--------
+        # datos local
+        if datos_local:
+            IVA = datos_local.get_IVA()
+            print(datos_local.mostrar_datos_empresa())
+        else:
+            print("----No se ecnontraron datos del local----")
+            IVA = 19
         if tipo_venta == 1:
             tipo = "Boleta"
         elif tipo_venta == 2:
@@ -249,7 +255,7 @@ def generar_ventas(tipo_venta, id_vendedor, carrito):
             print(tabla_cliente)
             tipo = "Factura"
 
-        tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo)
+        tabla_folio, tabla_detalle = resultado_venta.mostrar_detalle_venta(tipo, IVA)
         print(tabla_folio)
         print(tabla_detalle)
     else:
@@ -272,12 +278,12 @@ menu_carrito = {
 }
 
 # Función para ejecutar la opción seleccionada del menú
-def ejecutar_opcion_vendedor(menu, opcion, carrito, id_vendedor):
+def ejecutar_opcion_vendedor(menu, opcion, carrito, id_vendedor, datos_local):
     # Obtener la función y los argumentos correspondientes a la opción seleccionada del diccionario
     funcion, args = menu.get(opcion, (None, None))
     if funcion:
         if opcion == 3:
-            args = [carrito, id_vendedor]
+            args = [carrito, id_vendedor, datos_local]
         elif opcion != 4:
             args = [carrito]
         funcion(*args)
@@ -304,7 +310,7 @@ def iniciar_menu_vendedor(datos_usuario):
         if datos_local:
             estado_dia = datos_local.get_estado()
         else:
-            print("No se ecnontraron datos del local")
+            print("----No se ecnontraron datos del local----")
 
         mostrar_mensaje_bienvenida(datos_usuario)
         if estado_dia != 1:
@@ -314,14 +320,14 @@ def iniciar_menu_vendedor(datos_usuario):
         opciones = [
             ("1", "Registro de productos"),  # pasar carrito
             ("2", "Mostrar detalle carrito"),  # pasar carrito
-            ("3", "Generar ventas"),  # pasar carrito e id_vendedor
+            ("3", "Generar ventas"),  # pasar carrito , id_vendedor y del local
             ("4", "Salir del sistema")
         ]
         id_vendedor = datos_usuario["id"]
 
         crear_tabla(opciones)
         opcion = seleccionar_opcion("Ingrese una opción: ")
-        ejecutar_opcion_vendedor(menu_vendedor, opcion, carrito, id_vendedor)  # Pasar los parámetros correspondientes
+        ejecutar_opcion_vendedor(menu_vendedor, opcion, carrito, id_vendedor, datos_local)  # Pasar los parámetros correspondientes
         pausa()
         if opcion == 4:
             break
@@ -349,7 +355,7 @@ def submenu_carrito(carrito):
         pausa()
 
 # Función para iniciar el submenú de vendedor (generar venta)
-def submenu_venta(id_vendedor, carrito):
+def submenu_venta(id_vendedor, carrito, datos_local):
     while True:
         os.system('cls')
         print("#### Opción 3 seleccionada ####")
@@ -360,7 +366,7 @@ def submenu_venta(id_vendedor, carrito):
         crear_tabla(opciones)
         opcion = seleccionar_opcion("Ingrese una opción: ")
         if opcion in [1, 2]:
-            generar_ventas(opcion, id_vendedor, carrito) 
+            generar_ventas(opcion, id_vendedor, carrito, datos_local) 
             break
         else:
             print("----Opción no válida----")
