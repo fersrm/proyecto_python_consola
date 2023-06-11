@@ -1,5 +1,5 @@
 from conexion.conexion import Conexion, pymysql
-from controlador.clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
+from controlador.modelo.clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
 from controlador.validaciones import (
     validar_run, 
     validar_clave, 
@@ -89,7 +89,7 @@ def obtener_datos_producto(dato_producto):
                     "ON p.marca_FK = m.id_marca "
                 "INNER JOIN CATEGORIAS AS c "
                     "ON p.categoria_FK = c.id_categoria "
-                "WHERE codigo_producto = %s OR nombre_producto LIKE %s"
+                "WHERE p.codigo_producto = %s OR nombre_producto LIKE %s"
             )
             cursor.execute(sql_query, (dato_producto, f"%{dato_producto}%"))
             datos = cursor.fetchone()
@@ -292,7 +292,6 @@ def insertar_cliente(datos_cliente, id_vendedor):
     try:
         # Desempaquetar los datos
         run_cliente, nombre, apellido, direccion, tipo_giro, razon_social, comuna = datos_cliente
-        print(datos_cliente)
         # Consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
@@ -301,23 +300,23 @@ def insertar_cliente(datos_cliente, id_vendedor):
             # Obtener los resultados del procedimiento almacenado
             datos = cursor.fetchone()
             # Verificar si se obtuvieron resultados
-            if not datos:
-                return None
-            # Obtener los datos del cliente
-            id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
-            # Se crea una instancia con los datos
-            nuevo_cliente = DatosCliente(
-                id_cliente, 
-                run_cliente, 
-                nombre_cliente, 
-                apellido_cliente, 
-                comuna_cliente, 
-                region_cliente, 
-                razon_social, 
-                direccion_cliente, 
-                tipo_giro
-            )
-            return nuevo_cliente
+        if not datos:
+            return None
+        # Obtener los datos del cliente
+        id_cliente, run_cliente, nombre_cliente, apellido_cliente, razon_social, tipo_giro, direccion_cliente, comuna_cliente, region_cliente = datos
+        # Se crea una instancia con los datos
+        nuevo_cliente = DatosCliente(
+            id_cliente, 
+            run_cliente, 
+            nombre_cliente, 
+            apellido_cliente, 
+            comuna_cliente, 
+            region_cliente, 
+            razon_social, 
+            direccion_cliente, 
+            tipo_giro
+        )
+        return nuevo_cliente
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
@@ -351,3 +350,60 @@ def obtener_datos_empresa():
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error en la operación de la base de datos.
+    
+#----------------------------------------------------------------------------------------
+# Consultas para el jefe de ventas
+#----------------------------------------------------------------------------------------
+def tablas_registrar_producto():
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            # Llama al procedimiento almacenado
+            cursor.callproc("traer_tablas_producto", ())
+            # Obtener el primer conjunto de resultados (Marcas)
+            datos_marcas = cursor.fetchall()
+            # Avanzar al siguiente conjunto de resultados
+            cursor.nextset()   
+            # Obtener el segundo conjunto de resultados (Categorias)
+            datos_categorias = cursor.fetchall()
+        # Desempaquetar los datos 
+        marcas = []
+        for fila in datos_marcas:
+            marcas.append(fila)
+        categorias = []
+        for fila in datos_categorias:
+            categorias.append(fila)
+        return marcas, categorias
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
+def insetar_producto(datos_nuevo_producto, id_usuario):
+    try:
+        # Desempaquetar los datos
+        codigo_producto,nombre_producto, precio, marca, categoria = datos_nuevo_producto
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            # Llama al procedimiento almacenado utilizando execute
+            cursor.callproc("registro_producto",(codigo_producto, nombre_producto, precio, marca, categoria, id_usuario))
+            # Obtener los resultados del procedimiento almacenado
+            datos = cursor.fetchone()
+            # Verificar si se obtuvieron resultados
+        if not datos:
+            return None
+        # Se guardan los datos   
+        id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria = datos
+        # Se crea una instancia con los datos
+        producto = Producto(id_producto, codigo_producto, nombre_producto, precio_producto, marca, categoria)
+        return producto
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error desconocido en la operación de la base de datos.

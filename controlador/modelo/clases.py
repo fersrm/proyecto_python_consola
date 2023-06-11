@@ -160,6 +160,14 @@ class Producto:
 
     def get_categoria(self):
         return self.__categoria
+    
+    def mostrar_datos_producto(self):
+        tabla = PrettyTable()
+        tabla.field_names = ["Código Producto", "Nombre Producto", "Precio", "Marca", "Categoria"]
+
+        tabla.add_row([self.get_codigo(), self.get_nombre(), self.get_precio(), self.get_marca(), self.get_categoria()])
+
+        return tabla
 
 # Clases de detalle de las ventas
 class Ventas:

@@ -45,3 +45,11 @@ def crear_tabla(opciones):
         table.add_row([opcion, descripcion])   
     # Mostrar la tabla en la consola
     print(table)
+
+# muestra tablas
+def mostrar_tablas(descripcion, datos):
+    tabla = PrettyTable()
+    tabla.field_names = ["Número", descripcion]
+    for i, dato in enumerate(datos, start=1):
+        tabla.add_row([i, dato[0]])
+    print(tabla)

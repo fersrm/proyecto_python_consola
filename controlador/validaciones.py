@@ -27,7 +27,7 @@ def validar_clave(clave):
         return False  # Error en la validación de la clave.  
     return clave  # Devolver la clave normalizada
 
-def validar_producto(dato_evaluar): # Evalúa nombre o código
+def validar_producto(dato_evaluar): # Evalúa nombre, código, marca o categoria
     if not dato_evaluar:
         return False  # Error, el campo está vacío  
     dato_evaluar = dato_evaluar.strip().upper()  # Normalizar el dato a evaluar  

@@ -19,9 +19,10 @@ from menus_vista.opciones_menu import (
     pausa,
     salir,
     seleccionar_opcion,
-    crear_tabla
+    crear_tabla,
+    mostrar_tablas
 )
-from controlador.clases import CarritoCompra
+from controlador.modelo.clases import CarritoCompra
 import os
 from prettytable import PrettyTable
 
@@ -32,9 +33,8 @@ def agregar_detalle_productos(carrito):
     print("#### Opción 1 seleccionada ####")
     # Solicitar al usuario que ingrese el nombre o código del producto
     dato_producto = input("Ingrese nombre o código del producto: ")
-    # Normalizar los datos ingresados
+    # Normalizar y valida los datos ingresados
     dato_producto = validar_producto(dato_producto)
-    # Validar el nombre o código del producto
     if not dato_producto:
         print("----El producto ingresado no es válido----")
         return False
@@ -134,41 +134,40 @@ def vaciar_carrito(carrito):
     print("----Carrito de compra Vaciado con exito----")
     
 # Funcionabilidad registrar cliente
-def mostrar_tabla_clienta(descripcion, datos):
-    tabla = PrettyTable()
-    tabla.field_names = ["Número", descripcion]
-    for i, dato in enumerate(datos, start=1):
-        tabla.add_row([i, dato[0]])
-    print(tabla)
 
 def traer_datos_tabla_cliente():
     tipo_griro, razon_socail, comunas =  tablas_registrar_cliente()
     # se nuestra la tabla de tipos de giro
-    mostrar_tabla_clienta("Tipo de giro", tipo_griro)
+    mostrar_tablas("Tipo de giro", tipo_griro)
     seleccion_giro = selecionar_tabla("Tipo de giro", tipo_griro)
-    print(seleccion_giro)
+    print(f"----{seleccion_giro}----")
     # se nuestra la tabla de razon social si es necesario
     seleccion_razon = "NO TIENE"
     seleccionar_razon_social = input("¿Desea seleccionar una razón social? (s/n): ")
     if seleccionar_razon_social.lower() == "s":
-        mostrar_tabla_clienta("Razon social", razon_socail)
+        mostrar_tablas("Razon social", razon_socail)
         seleccion_razon = selecionar_tabla("Razon social", razon_socail)
-        print(seleccion_razon)
+        print(f"----{seleccion_razon}----")
     # se nuestra la tabla de las comunas
-    mostrar_tabla_clienta("Comuna", comunas)
+    mostrar_tablas("Comuna", comunas)
     seleccion_comuna = selecionar_tabla("Comuna", comunas)
-    print(seleccion_comuna)
+    print(f"----{seleccion_comuna}----")
 
     return seleccion_giro, seleccion_razon , seleccion_comuna
 
 def selecionar_tabla(descripcion, elemnto_tabla):
     while True:
         if descripcion == "Razon social":
-            respuesta = input("Pertenece a otra : Razon social. (s/n): ")
+            respuesta = input("Pertenece a otra Razon social. (s/n): ")
             if respuesta.lower() == "s":
-                dato = input("Ingresa la Razon social: ")
-                dato = validar_razon_social(dato)
-                return dato
+                while True:
+                    dato = input("Ingresa la Razon social: ")
+                    dato = validar_razon_social(dato)
+                    if dato:
+                        return dato
+                    else:
+                        print("----Nombre de la Razon social es inválido. Inténtelo nuevamente.----")
+
         seleccion = seleccionar_opcion("Seleccione un número de la tabla: ")
         if not seleccion <= len(elemnto_tabla):
             print("----Selecion inválida----")
