@@ -1,4 +1,5 @@
 import re  # Para expreciones regulares
+from datetime import datetime # para ña fechas
 
 def validar_numero(numero):
     numero = numero.strip()
@@ -62,3 +63,16 @@ def validar_razon_social(razon_social):
     if len(razon_social) < 3:
         return False  # Error en la validación del producto
     return razon_social  # Devolver el dato normalizado
+
+def validar_fecha(fecha):
+    try:
+        fecha = fecha.strip()
+        fecha_actual = datetime.now().date()
+        fecha_ingresada = datetime.strptime(fecha, "%Y-%m-%d").date()
+        # Veria que la fecha sea menor a la actual
+        if fecha_ingresada <= fecha_actual and fecha_ingresada.year >= 2021:
+            return fecha_ingresada
+        else:
+            return False
+    except ValueError:
+        return False

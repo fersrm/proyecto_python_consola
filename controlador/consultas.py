@@ -354,6 +354,7 @@ def obtener_datos_empresa():
 #----------------------------------------------------------------------------------------
 # Consultas para el jefe de ventas
 #----------------------------------------------------------------------------------------
+# Funciones para registrar un nuevo producto
 def tablas_registrar_producto():
     try:
         # Consulta a la base de datos
@@ -407,3 +408,48 @@ def insetar_producto(datos_nuevo_producto, id_usuario):
     except Exception as error:
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error desconocido en la operación de la base de datos.
+
+# Funciones para generar informes
+def obtener_datos_vendedor(run):
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = (
+                "SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
+                "FROM USUARIOS AS u "
+                "INNER JOIN ROLES AS rol "
+                    "ON u.rol_FK = rol.id_rol "
+                "INNER JOIN COMUNAS AS c "
+                    "ON u.comuna_FK = c.id_comuna "
+                "INNER JOIN REGIONES AS r "
+                    "ON c.region_FK = r.id_regiones "
+                "WHERE u.run_usuario = %s AND u.rol_FK = 2 "
+            )
+            cursor.execute(sql_query, (run))
+            datos = cursor.fetchone()
+        # Verificar si se obtuvieron resultados
+        if not datos:
+            return None  # No se encontraron datos para el usuario especificado.
+        # Se guardan los datos
+        id_user, run_user, clave_user, nombre_user, apellido_user, id_rol_usur, rol_user, comuna_user, region_user = datos
+        # Se crea una instancia con los datos
+        user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
+        return user
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+
+def generar_informe(opcion, condicion_busqueda):
+    if opcion == 1:
+        fecha_busqueda = f"{condicion_busqueda}%"
+        where = f"WHERE v.fecha_emision LIKE '{fecha_busqueda}'"
+    else:
+        where = f"WHERE v.vendedor_FK = {condicion_busqueda.get_run()}"
+        
+    # utilizar en la consulta
+    consulta = f"SELECT * FROM tabla {where}"
+    print(consulta)

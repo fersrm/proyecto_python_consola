@@ -1,4 +1,3 @@
-from controlador.validaciones import validar_numero
 import os
 from prettytable import PrettyTable
 
@@ -26,15 +25,15 @@ def salir(mensaje):
     os.system('cls')
     print(mensaje)
 
-# Función para seleccionar una opción del menú o un numero
-def seleccionar_opcion(mensaje):
+# bucle para obtener un input valido
+def obtener_input_validado(mensaje, validador):
     while True:
-        numero = input(mensaje)
-        numero = validar_numero(numero)
-
-        if numero is not False:
-            return numero
-        print("----No es un número válido----")
+        entrada = input(mensaje)
+        entrada_validada = validador(entrada)
+        if entrada_validada:
+            return entrada_validada
+        else:
+            print("----Entrada inválida----")  
 
 # Función para crear una tabla de opciones para los menu
 def crear_tabla(opciones):

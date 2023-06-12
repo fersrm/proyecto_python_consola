@@ -2,7 +2,8 @@ from controlador.validaciones import (
     validar_producto,
     validar_cliente,
     validar_direccion,
-    validar_razon_social
+    validar_razon_social,
+    validar_numero
 )
 from controlador.consultas import (
     obtener_datos_producto,
@@ -18,9 +19,9 @@ from menus_vista.opciones_menu import (
     mostrar_mensaje_bienvenida,
     pausa,
     salir,
-    seleccionar_opcion,
     crear_tabla,
-    mostrar_tablas
+    mostrar_tablas,
+    obtener_input_validado
 )
 from controlador.modelo.clases import CarritoCompra
 import os
@@ -46,11 +47,11 @@ def agregar_detalle_productos(carrito):
             # Mostrar tabla con los productos encontrados
             mostrar_tabla_productos(productos)
             # Solicitar al usuario que seleccione un producto por su número
-            seleccion = seleccionar_opcion("Seleccione un número de producto: ")
+            seleccion = obtener_input_validado("Seleccione un número de producto: ", validar_numero)
             if seleccion <= len(productos):
                 codigo = productos[seleccion - 1]["codigo"]
                 producto_seleccionado = obtener_datos_producto(codigo)
-                cantidad = seleccionar_opcion("Ingrese la cantidad: ")
+                cantidad = obtener_input_validado("Ingrese la cantidad: ", validar_numero)
                 carrito.agregar_producto(producto_seleccionado, cantidad)
                 print("----Producto agregado al carrito----")
             else:
@@ -67,7 +68,7 @@ def agregar_detalle_productos(carrito):
                 "nombre": producto.get_nombre(),
                 "precio": producto.get_precio(),
             }])
-            cantidad = seleccionar_opcion("Ingrese la cantidad: ")
+            cantidad = obtener_input_validado("Ingrese la cantidad: ", validar_numero)
             carrito.agregar_producto(producto, cantidad)
             print("----Producto agregado al carrito----")
         else:
@@ -107,7 +108,7 @@ def ventas(carrito, id_vendedor, datos_local):
 # Funcionabilidad carrito de compra (submenu_carrito)
 def editar_carrito(carrito):
     codigo_producto = input("Ingrese el codigo del producto: ").upper()
-    nueva_cantidad = seleccionar_opcion("Ingrese la nueva cantidad: ")
+    nueva_cantidad = obtener_input_validado("Ingrese la nueva cantidad: ", validar_numero)
     actualiza_cantidad = carrito.actualizar_cantidad(codigo_producto,nueva_cantidad)
     os.system('cls')
     detalle_carrito = carrito.mostrar_detalle()
@@ -134,6 +135,20 @@ def vaciar_carrito(carrito):
     print("----Carrito de compra Vaciado con exito----")
     
 # Funcionabilidad registrar cliente
+def selecionar_tabla(descripcion, elemnto_tabla):
+    while True:
+        if descripcion == "Razon social":
+            respuesta = input("Pertenece a otra Razon social. (s/n): ")
+            if respuesta.lower() == "s":
+                razon_social = obtener_input_validado("Ingresa la Razon social: ", validar_razon_social)
+                return razon_social
+
+        seleccion = obtener_input_validado("Seleccione un número de la tabla: ", validar_numero)
+        if not seleccion <= len(elemnto_tabla):
+            print("----Selecion inválida----")
+        else:
+            dato = elemnto_tabla[seleccion - 1][0]
+            return dato
 
 def traer_datos_tabla_cliente():
     tipo_griro, razon_socail, comunas =  tablas_registrar_cliente()
@@ -155,50 +170,10 @@ def traer_datos_tabla_cliente():
 
     return seleccion_giro, seleccion_razon , seleccion_comuna
 
-def selecionar_tabla(descripcion, elemnto_tabla):
-    while True:
-        if descripcion == "Razon social":
-            respuesta = input("Pertenece a otra Razon social. (s/n): ")
-            if respuesta.lower() == "s":
-                while True:
-                    dato = input("Ingresa la Razon social: ")
-                    dato = validar_razon_social(dato)
-                    if dato:
-                        return dato
-                    else:
-                        print("----Nombre de la Razon social es inválido. Inténtelo nuevamente.----")
-
-        seleccion = seleccionar_opcion("Seleccione un número de la tabla: ")
-        if not seleccion <= len(elemnto_tabla):
-            print("----Selecion inválida----")
-        else:
-            dato = elemnto_tabla[seleccion - 1][0]
-            return dato
-
 def registrar_cliente(run_cliente):
-    while True:
-        nombre = input("Ingrese el nombre del cliente: ")
-        nombre = validar_cliente(nombre)
-        if nombre:
-            break
-        else:
-            print("----Nombre inválido. Inténtelo nuevamente.----")
-
-    while True:
-        apellido = input("Ingrese el apellido del cliente: ")
-        apellido = validar_cliente(apellido)
-        if apellido:
-            break
-        else:
-            print("----Apellido inválido. Inténtelo nuevamente.----")
-
-    while True:
-        direccion = input("Ingrese la dirección del cliente: ")
-        direccion = validar_direccion(direccion)
-        if direccion:
-            break
-        else:
-            print("----Dirección inválida. Inténtelo nuevamente.----")
+    nombre = obtener_input_validado("Ingrese el nombre del cliente: ", validar_cliente)
+    apellido = obtener_input_validado("Ingrese el apellido del cliente: ", validar_cliente)
+    direccion = obtener_input_validado("Ingrese la dirección del cliente: ", validar_direccion)
 
     giro, razon, comuna = traer_datos_tabla_cliente()
     datos_cliente = [run_cliente, nombre, apellido, direccion, giro, razon, comuna]
@@ -325,7 +300,7 @@ def iniciar_menu_vendedor(datos_usuario):
         id_vendedor = datos_usuario["id"]
 
         crear_tabla(opciones)
-        opcion = seleccionar_opcion("Ingrese una opción: ")
+        opcion = obtener_input_validado("Ingrese una opción: ", validar_numero)
         ejecutar_opcion_vendedor(menu_vendedor, opcion, carrito, id_vendedor, datos_local)  # Pasar los parámetros correspondientes
         pausa()
         if opcion == 4:
@@ -346,7 +321,7 @@ def submenu_carrito(carrito):
             ("4", "Salir del carrito")
         ]
         crear_tabla(opciones)
-        opcion = seleccionar_opcion("Ingrese una opción: ")
+        opcion = obtener_input_validado("Ingrese una opción: ", validar_numero)
 
         ejecutar_opcion_carrito(menu_carrito, opcion, carrito)  # Pasar los parámetros correspondientes
         if opcion == 4 or opcion == 3:
@@ -363,7 +338,7 @@ def submenu_venta(id_vendedor, carrito, datos_local):
             ("2", "Generar Factura")
         ]
         crear_tabla(opciones)
-        opcion = seleccionar_opcion("Ingrese una opción: ")
+        opcion = obtener_input_validado("Ingrese una opción: ", validar_numero)
         if opcion in [1, 2]:
             generar_ventas(opcion, id_vendedor, carrito, datos_local) 
             break
