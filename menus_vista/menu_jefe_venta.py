@@ -38,14 +38,30 @@ def cambiar_estado(datos_local):
 def realizar_informe(opcion):
     if opcion == 1:
         fecha = obtener_input_validado("Ingrese la fecha que desea en formato YYYY-mm-dd: ", validar_fecha)
-        generar_informe(opcion, fecha)
+        ventas = generar_informe(opcion, fecha)
     else:
         run_vendedor = obtener_input_validado("Ingrese el RUN del vendedor: ", validar_run)
         datos_vendedor = obtener_datos_usuario(run_vendedor, rol= 2)
         if datos_vendedor == 3 or datos_vendedor is None:
             print("----No se encontraron datos para el usuario especificado----")
         else:
-            generar_informe(opcion, datos_vendedor)
+            ventas = generar_informe(opcion, datos_vendedor)
+    if ventas:
+        tabla_boletas = ventas.mostrar_boletas()
+        tabla_facturas = ventas.mostrar_facturas()
+        os.system('cls')
+        if len(tabla_boletas._rows) > 0:
+            print("Tabla de Boletas:")
+            print(tabla_boletas)
+
+        if len(tabla_facturas._rows) > 0:
+            print("Tabla de Facturas:")
+            print(tabla_facturas)
+        else:
+            print("No se encontraron facturas.")
+
+    else:
+        print("----No se encontraron datos----")
 
 # Funcion para iniciar el submenu de jefe de ventas (generar informe)
 def submenu_informe():

@@ -171,11 +171,10 @@ class Producto:
 
 # Clases de detalle de las ventas
 class Ventas:
-    def __init__(self, id_venta, fecha_venta, cliente, vendedor):
+    def __init__(self, id_venta, fecha_venta, total_venta):
         self.__id_venta = id_venta
         self.__fecha_venta = fecha_venta
-        self.__cliente = cliente
-        self.__vendedor = vendedor
+        self.__total_venta = total_venta
 
     def set_id_venta(self, id_venta):
         self.__id_venta = id_venta
@@ -189,17 +188,31 @@ class Ventas:
     def get_fecha_venta(self):
         return self.__fecha_venta
 
-    def set_cliente(self, cliente):
-        self.__cliente = cliente
+    def set_total_venta(self, total_venta):
+        self.__total_venta = total_venta
 
-    def get_cliente(self):
-        return self.__cliente
+    def get_total_venta(self):
+        return self.__total_venta
+    
+    def mostrar_boletas(self):
+        tabla_boletas = PrettyTable()
+        tabla_boletas.field_names = ["Fecha", "Monto Boleta"]
 
-    def set_vendedor(self, vendedor):
-        self.__vendedor = vendedor
+        for fecha, monto_boleta in zip(self.__fecha_venta, self.__total_venta[1]):
+            if monto_boleta is not None:
+                tabla_boletas.add_row([fecha, monto_boleta])
 
-    def get_vendedor(self):
-        return self.__vendedor
+        return tabla_boletas
+
+    def mostrar_facturas(self):
+        tabla_facturas = PrettyTable()
+        tabla_facturas.field_names = ["Fecha", "Monto Factura"]
+
+        for fecha, monto_factura in zip(self.__fecha_venta, self.__total_venta[0]):
+            if monto_factura is not None:
+                tabla_facturas.add_row([fecha, monto_factura])
+
+        return tabla_facturas
 
 # detalle factura o boleta (cantidad, total por producto, codigo y  nombre se guardan una lista)
 class DetalleVentas:
@@ -280,31 +293,6 @@ class DetalleVentas:
         tabla.add_row(["Total Neto: ", total_neto, f"IVA: {IVA}% ", total_iva, "Sub Total: ", subtotal])
 
         return tabla_folio, tabla
-
-# Clase Facturas y boleta
-class Venta:
-    def __init__(self, id, total_venta, id_venta):
-        self.__id = id
-        self.__total_venta = total_venta
-        self.__id_venta = id_venta
-
-    def set_id(self, id):
-        self.__id = id
-
-    def get_id(self):
-        return self.__id
-
-    def set_total_venta(self, total_venta):
-        self.__total_venta = total_venta
-
-    def get_total_venta(self):
-        return self.__total_venta
-
-    def set_id_venta(self, id_venta):
-        self.__id_venta = id_venta
-
-    def get_id_venta(self):
-        return self.__id_venta
 
 # Clase de datos de la empresa
 class DetalleEmpresa:

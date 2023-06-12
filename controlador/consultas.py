@@ -1,5 +1,12 @@
 from conexion.conexion import Conexion, pymysql
-from controlador.modelo.clases import DatosUsuario, Producto, DatosCliente, DetalleVentas, DetalleEmpresa
+from controlador.modelo.clases import (
+    DatosUsuario, 
+    Producto, 
+    DatosCliente, 
+    DetalleVentas, 
+    DetalleEmpresa,
+    Ventas
+)
 from controlador.validaciones import (
     validar_run, 
     validar_clave, 
@@ -425,10 +432,45 @@ def insetar_producto(datos_nuevo_producto, id_usuario):
 def generar_informe(opcion, condicion_busqueda):
     if opcion == 1:
         fecha_busqueda = f"{condicion_busqueda}%"
-        where = f"WHERE v.fecha_emision LIKE '{fecha_busqueda}'"
+        where = f"WHERE v.fecha_emcion LIKE '{fecha_busqueda}'"
     else:
-        where = f"WHERE v.vendedor_FK = {condicion_busqueda.get_run()}"
-        
+        where = f"WHERE v.usuario_FK = (SELECT id_usuario FROM USUARIOS WHERE run_usuario =  '{condicion_busqueda.get_run()}')"
+        print(where)
     # utilizar en la consulta
-    consulta = f"SELECT * FROM tabla {where}"
-    print(consulta)
+    try:
+        # Consulta a la base de datos
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = (
+                "SELECT v.id_venta, date(v.fecha_emcion) AS fecha, f.total_factura AS monto_factura, b.total_boleta AS monto_boleta "
+                "FROM VENTAS v "
+                "LEFT JOIN FACTURAS f ON v.id_venta = f.venta_FK "
+                "LEFT JOIN BOLETAS b ON v.id_venta = b.venta_FK "
+                f"{where}"
+            )
+            cursor.execute(sql_query)
+            resultados = cursor.fetchall()
+        # Verificar si se obtuvieron resultados
+        if not resultados :
+            return False
+        # Extraer los datos
+        id_venta = []
+        fecha = []
+        total_factura = []
+        total_boleta = []
+        for fila in resultados:
+            id_venta.append(fila[0])
+            fecha.append(fila[1])
+            total_factura.append(fila[2])
+            total_boleta.append(fila[3])
+        total_venta = [total_factura, total_boleta]
+        # Crear una instancia
+        ventas = Ventas(id_venta, fecha, total_venta)
+        return ventas
+
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return None  # Ocurrió un error en la operación de la base de datos.
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return None
