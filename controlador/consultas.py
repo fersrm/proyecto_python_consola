@@ -8,30 +8,42 @@ from controlador.validaciones import (
 
 # Funciones de consultas SQL
 # Funciones para usuarios
-def obtener_datos_usuario(run, clave):
+def obtener_datos_usuario(run, clave=None, rol=None):
     try:
         # Validación de RUN y clave
         run = validar_run(run)
         if not run:
             return 1
-        clave = validar_clave(clave)
-        if not clave:
-            return 2
-        # Consulta a la base de datos
+        if clave is not None:
+            clave = validar_clave(clave)
+            if not clave:
+                return 2
+        # Construir la consulta SQL
+        sql_query = (
+            "SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
+            "FROM USUARIOS AS u "
+            "INNER JOIN ROLES AS rol "
+            "ON u.rol_FK = rol.id_rol "
+            "INNER JOIN COMUNAS AS c "
+            "ON u.comuna_FK = c.id_comuna "
+            "INNER JOIN REGIONES AS r "
+            "ON c.region_FK = r.id_regiones "
+            "WHERE u.run_usuario = %s"
+        )
+
+        params = [run]
+        # Si viene la clave la agrega a la consulta
+        if clave is not None:
+            sql_query += " AND u.clave_usuario = %s"
+            params.append(clave)
+        # Si viene el rol lo agrega a la consulta
+        if rol is not None:
+            sql_query += " AND u.rol_FK = %s"
+            params.append(rol)
+        # Ejecutar la consulta a la base de datos
         with Conexion() as conexion:
             cursor = conexion.get_cursor()
-            sql_query = (
-                "SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
-                "FROM USUARIOS AS u "
-                "INNER JOIN ROLES AS rol "
-                    "ON u.rol_FK = rol.id_rol "
-                "INNER JOIN COMUNAS AS c "
-                    "ON u.comuna_FK = c.id_comuna "
-                "INNER JOIN REGIONES AS r "
-                    "ON c.region_FK = r.id_regiones "
-                "WHERE u.run_usuario = %s AND u.clave_usuario = %s"
-            )
-            cursor.execute(sql_query, (run, clave))
+            cursor.execute(sql_query, params)
             datos = cursor.fetchone()
         # Verificar si se obtuvieron resultados
         if not datos:
@@ -43,10 +55,10 @@ def obtener_datos_usuario(run, clave):
         return user
     except pymysql.err.Error as error:
         print(f"Error de base de datos: {error}")
-        return 4  # Ocurrió un error en la operación de la base de datos.
+        return None  # Ocurrió un error en la operación de la base de datos.
     except Exception as error:
         print(f"Error desconocido: {error}")
-        return 4  # Ocurrió un error en la operación de la base de datos.
+        return None  # Ocurrió un error desconocido.
 
 # Funciones para productos
 def buscar_producto(dato_producto):
@@ -409,40 +421,7 @@ def insetar_producto(datos_nuevo_producto, id_usuario):
         print(f"Error desconocido: {error}")
         return None  # Ocurrió un error desconocido en la operación de la base de datos.
 
-# Funciones para generar informes
-def obtener_datos_vendedor(run):
-    try:
-        # Consulta a la base de datos
-        with Conexion() as conexion:
-            cursor = conexion.get_cursor()
-            sql_query = (
-                "SELECT u.id_usuario, u.run_usuario, u.clave_usuario, u.nombre_usuario, u.apellido_usuario, u.rol_FK, rol.rol_usuario, c.nombre_comuna, r.nombre_region "
-                "FROM USUARIOS AS u "
-                "INNER JOIN ROLES AS rol "
-                    "ON u.rol_FK = rol.id_rol "
-                "INNER JOIN COMUNAS AS c "
-                    "ON u.comuna_FK = c.id_comuna "
-                "INNER JOIN REGIONES AS r "
-                    "ON c.region_FK = r.id_regiones "
-                "WHERE u.run_usuario = %s AND u.rol_FK = 2 "
-            )
-            cursor.execute(sql_query, (run))
-            datos = cursor.fetchone()
-        # Verificar si se obtuvieron resultados
-        if not datos:
-            return None  # No se encontraron datos para el usuario especificado.
-        # Se guardan los datos
-        id_user, run_user, clave_user, nombre_user, apellido_user, id_rol_usur, rol_user, comuna_user, region_user = datos
-        # Se crea una instancia con los datos
-        user = DatosUsuario(id_user, run_user, nombre_user, apellido_user, comuna_user, region_user, rol_user, clave_user, id_rol_usur)
-        return user
-    except pymysql.err.Error as error:
-        print(f"Error de base de datos: {error}")
-        return None # Ocurrió un error en la operación de la base de datos.
-    except Exception as error:
-        print(f"Error desconocido: {error}")
-        return None  # Ocurrió un error en la operación de la base de datos.
-
+# Funcionabilidad para generar informes
 def generar_informe(opcion, condicion_busqueda):
     if opcion == 1:
         fecha_busqueda = f"{condicion_busqueda}%"

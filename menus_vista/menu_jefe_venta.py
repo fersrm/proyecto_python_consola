@@ -12,7 +12,7 @@ from controlador.consultas import (
     insetar_producto,
     tablas_registrar_producto,
     generar_informe,
-    obtener_datos_vendedor
+    obtener_datos_usuario
 )
 from controlador.validaciones import (
     validar_producto,
@@ -41,11 +41,11 @@ def realizar_informe(opcion):
         generar_informe(opcion, fecha)
     else:
         run_vendedor = obtener_input_validado("Ingrese el RUN del vendedor: ", validar_run)
-        datos_vendedor = obtener_datos_vendedor(run_vendedor)
-        if datos_vendedor:
-            generar_informe(opcion, datos_vendedor)
-        else:
+        datos_vendedor = obtener_datos_usuario(run_vendedor, rol= 2)
+        if datos_vendedor == 3 or datos_vendedor is None:
             print("----No se encontraron datos para el usuario especificado----")
+        else:
+            generar_informe(opcion, datos_vendedor)
 
 # Funcion para iniciar el submenu de jefe de ventas (generar informe)
 def submenu_informe():

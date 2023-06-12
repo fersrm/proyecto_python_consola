@@ -39,7 +39,7 @@ def iniciar_aplicacion():
             elif datos == 3:
                 print("----No se encontraron datos para el usuario especificado----")
                 pausa()
-            elif datos == 4:
+            elif datos is None:
                 print("----Ocurrió un error en la operación de la base de datos----")
                 pausa()
             else:
