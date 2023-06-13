@@ -23,7 +23,9 @@ USE `bazar` ;
 CREATE TABLE IF NOT EXISTS `bazar`.`ROLES` (
   `id_rol` INT(1) NOT NULL AUTO_INCREMENT,
   `rol_usuario` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`id_rol`))
+  PRIMARY KEY (`id_rol`),
+  UNIQUE INDEX `nombre_rol_UNIQUE` (`rol_usuario` ASC)
+)
 ENGINE = InnoDB;
 
 
@@ -101,7 +103,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `bazar`.`RAZON_SOCIAL` (
   `id_razon_social` INT NOT NULL AUTO_INCREMENT,
   `razon_social` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_razon_social`))
+  PRIMARY KEY (`id_razon_social`),
+  UNIQUE INDEX `razon_social_UNIQUE` (`razon_social` ASC)
+)
 ENGINE = InnoDB;
 
 
@@ -153,7 +157,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `bazar`.`MARCAS` (
   `id_marca` INT(2) NOT NULL AUTO_INCREMENT,
   `nombre_marca` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`id_marca`))
+  PRIMARY KEY (`id_marca`),
+  UNIQUE INDEX `nombre_marca_UNIQUE` (`nombre_marca` ASC)
+)
 ENGINE = InnoDB;
 
 
@@ -163,7 +169,9 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `bazar`.`CATEGORIAS` (
   `id_categoria` INT(2) NOT NULL AUTO_INCREMENT,
   `nombre_categoria` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`id_categoria`))
+  PRIMARY KEY (`id_categoria`),
+  UNIQUE INDEX `nombre_categoria_UNIQUE` (`nombre_categoria` ASC)
+)
 ENGINE = InnoDB;
 
 
@@ -179,9 +187,10 @@ CREATE TABLE IF NOT EXISTS `bazar`.`PRODUCTOS` (
   `usuario_FK` INT(2) NOT NULL,
   `categoria_FK` INT(2) NOT NULL,
   PRIMARY KEY (`id_producto`),
-  INDEX `fk_PRODUCTOS_MARCAS1_idx` (`marca_FK` ASC) ,
-  INDEX `fk_PRODUCTOS_USUARIOS1_idx` (`usuario_FK` ASC) ,
-  INDEX `fk_PRODUCTOS_CATEGORIAS1_idx` (`categoria_FK` ASC) ,
+  UNIQUE INDEX `codigo_producto_UNIQUE` (`codigo_producto` ASC),
+  INDEX `fk_PRODUCTOS_MARCAS1_idx` (`marca_FK` ASC),
+  INDEX `fk_PRODUCTOS_USUARIOS1_idx` (`usuario_FK` ASC),
+  INDEX `fk_PRODUCTOS_CATEGORIAS1_idx` (`categoria_FK` ASC),
   CONSTRAINT `fk_PRODUCTOS_MARCAS1`
     FOREIGN KEY (`marca_FK`)
     REFERENCES `bazar`.`MARCAS` (`id_marca`)
@@ -196,7 +205,8 @@ CREATE TABLE IF NOT EXISTS `bazar`.`PRODUCTOS` (
     FOREIGN KEY (`categoria_FK`)
     REFERENCES `bazar`.`CATEGORIAS` (`id_categoria`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
 
 

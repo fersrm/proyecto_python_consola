@@ -138,8 +138,8 @@ def vaciar_carrito(carrito):
 def selecionar_tabla(descripcion, elemnto_tabla):
     while True:
         if descripcion == "Razon social":
-            respuesta = input("Pertenece a otra Razon social. (s/n): ")
-            if respuesta.lower() == "s":
+            respuesta = input("¿Pertenece a una de estas Razones sociales?. (s/n): ")
+            if respuesta.lower() == "n":
                 razon_social = obtener_input_validado("Ingresa la Razon social: ", validar_razon_social)
                 return razon_social
 
@@ -158,7 +158,7 @@ def traer_datos_tabla_cliente():
     print(f"----{seleccion_giro}----")
     # se nuestra la tabla de razon social si es necesario
     seleccion_razon = "NO TIENE"
-    seleccionar_razon_social = input("¿Desea seleccionar una razón social? (s/n): ")
+    seleccionar_razon_social = input("¿Pertenece a una razón social? (s/n): ")
     if seleccionar_razon_social.lower() == "s":
         mostrar_tablas("Razon social", razon_socail)
         seleccion_razon = selecionar_tabla("Razon social", razon_socail)
