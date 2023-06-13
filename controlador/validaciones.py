@@ -5,8 +5,8 @@ def validar_numero(numero):
     numero = numero.strip()
     if not numero:
         return False  # Error, el campo está vacío  
-    # Verificar que sea un entero positivo.
-    if not numero.isdigit() or int(numero) < 0:
+    # Verificar que sea un entero positivo y que su longitud no sea mayor a 6.
+    if not numero.isdigit() or int(numero) < 0 or len(numero) > 6:
         return False # Error la validacion del numero
     return int(numero)
 
@@ -33,7 +33,7 @@ def validar_producto(dato_evaluar): # Evalúa nombre, código, marca o categoria
         return False  # Error, el campo está vacío  
     dato_evaluar = dato_evaluar.strip().upper()  # Normalizar el dato a evaluar  
     # Verificar longitud
-    if len(dato_evaluar) < 2:
+    if len(dato_evaluar) < 2 or len(dato_evaluar) > 20:
         return False  # Error en la validación del producto  
     return dato_evaluar  # Devolver el dato normalizado
 
@@ -41,27 +41,27 @@ def validar_cliente(dato_evaluar): # Evalua nombre y apellido
     dato_evaluar = dato_evaluar.strip().upper()
     if not dato_evaluar:
         return False
-    # verifica que solo sea letras
-    if not dato_evaluar.isalpha() or len(dato_evaluar) < 2:
+    # verifica que solo sea letras y la longitud
+    if not dato_evaluar.isalpha() or len(dato_evaluar) < 2 or len(dato_evaluar) > 25:
         return False
     return  dato_evaluar
 
-def validar_direccion(direcion):
-    direcion = direcion.strip().upper()
-    if not direcion:
+def validar_direccion(direccion):
+    direccion = direccion.strip().upper()
+    if not direccion:
         return False
-    # verifica que solo sea alfanumerico
-    if not direcion.isalnum() or len(direcion) < 5:
+    # verifica la longitud
+    if len(direccion) < 5 or len(direccion) > 60:
         return False
-    return  direcion
+    return direccion
 
 def validar_razon_social(razon_social):
     if not razon_social:
         return False  # Error, el campo está vacío
     razon_social = razon_social.strip().upper()  
     # Verificar longitud
-    if len(razon_social) < 3:
-        return False  # Error en la validación del producto
+    if len(razon_social) < 3 or len(razon_social) > 35:
+        return False  # Error en la validación 
     return razon_social  # Devolver el dato normalizado
 
 def validar_fecha(fecha):

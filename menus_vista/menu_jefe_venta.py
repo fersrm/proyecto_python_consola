@@ -66,7 +66,6 @@ def cambiar_estado(datos_local):
                 print("----No se encontraron datos de ventas----")
     else:
         print("Ocurrió un error al cambiar el estado en la base de datos.")
-
             
 #------Funcionabilidad realizar informes--------------
 

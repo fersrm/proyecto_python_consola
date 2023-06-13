@@ -10,38 +10,20 @@ class Persona:
         self.__comuna = comuna.upper()
         self.__region = region.upper()
 
-    def set_id(self, id):
-        self.__id = id
-
     def get_id(self):
         return self.__id
     
-    def set_run(self, run):
-        self.__run = run
-
     def get_run(self):
         return self.__run
-
-    def set_nombre(self, nombre):
-        self.__nombre = nombre
 
     def get_nombre(self):
         return self.__nombre
 
-    def set_apellido(self, apellido):
-        self.__apellido = apellido
-
     def get_apellido(self):
         return self.__apellido
 
-    def set_comuna(self, comuna):
-        self.__comuna = comuna
-
     def get_comuna(self):
         return self.__comuna
-
-    def set_region(self, region):
-        self.__region = region
 
     def get_region(self):
         return self.__region
@@ -53,20 +35,11 @@ class DatosUsuario(Persona):
         self.__clave = clave.upper()
         self.__id_rol = id_rol
 
-    def set_id_rol(self, id_rol):
-        self.__id_rol = id_rol
-
     def get_id_rol(self):
         return self.__id_rol
-    
-    def set_rol(self, rol):
-        self.__rol = rol
 
     def get_rol(self):
         return self.__rol
-
-    def set_clave(self, clave):
-        self.__clave = clave
 
     def get_clave(self):
         return self.__clave
@@ -86,20 +59,11 @@ class DatosCliente(Persona):
         self.__direccion = direccion.upper()
         self.__tipo_giro = tipo_giro.upper()
 
-    def set_razon_social(self, razon_social):
-        self.__razon_social = razon_social
-
     def get_razon_social(self):
         return self.__razon_social
 
-    def set_direccion(self, direccion):
-        self.__direccion = direccion
-
     def get_direccion(self):
         return self.__direccion
-
-    def set_tipo_giro(self, tipo_giro):
-        self.__tipo_giro = tipo_giro
 
     def get_tipo_giro(self):
         return self.__tipo_giro
@@ -111,7 +75,6 @@ class DatosCliente(Persona):
         tabla.add_row([f"Nombre: {self.get_nombre()} {self.get_apellido()} RUN: {self.get_run()}"])
         tabla.add_row([f"Direccion: {self.get_direccion()} Comuna: {self.get_comuna()} Region: {self.get_region()}"])
         tabla.add_row([f"Razon Social: {self.get_razon_social()} Tipo de giro: {self.get_tipo_giro()}"])
-
 
         return tabla
 
@@ -125,38 +88,20 @@ class Producto:
         self.__marca = marca.upper()
         self.__categoria = categoria.upper()
 
-    def set_id(self, id_producto):
-        self.__id = id_producto
-
     def get_id(self):
         return self.__id
-    
-    def set_codigo(self, codigo_producto):
-        self.__codigo = codigo_producto
 
     def get_codigo(self):
         return self.__codigo
 
-    def set_nombre(self, nombre_producto):
-        self.__nombre = nombre_producto
-
     def get_nombre(self):
         return self.__nombre
-
-    def set_precio(self, precio_producto):
-        self.__precio = precio_producto
 
     def get_precio(self):
         return self.__precio
 
-    def set_marca(self, marca):
-        self.__marca = marca
-
     def get_marca(self):
         return self.__marca
-
-    def set_categoria(self, categoria):
-        self.__categoria = categoria
 
     def get_categoria(self):
         return self.__categoria
@@ -176,20 +121,11 @@ class Ventas:
         self.__fecha_venta = fecha_venta
         self.__total_venta = total_venta
 
-    def set_id_venta(self, id_venta):
-        self.__id_venta = id_venta
-
     def get_id_venta(self):
         return self.__id_venta
 
-    def set_fecha_venta(self, fecha_venta):
-        self.__fecha_venta = fecha_venta
-
     def get_fecha_venta(self):
         return self.__fecha_venta
-
-    def set_total_venta(self, total_venta):
-        self.__total_venta = total_venta
 
     def get_total_venta(self):
         return self.__total_venta
@@ -226,44 +162,23 @@ class DetalleVentas:
         self.__precio_unitario = precio_unitario
         self.__fecha_venta = fecha_venta
 
-    def set_cantidad_productos(self, cantidad_productos):
-        self.__cantidad_productos = cantidad_productos
-
     def get_cantidad_productos(self):
         return self.__cantidad_productos
-
-    def set_total_productos(self, total_productos):
-        self.__total_productos = total_productos
 
     def get_total_productos(self):
         return self.__total_productos
 
-    def set_id_compra(self, id_compra):
-        self.__id_compra = id_compra
-
     def get_id_compra(self):
         return self.__id_compra
 
-    def set_total_compra(self, total_compra):
-        self.__total_compra = total_compra
-
     def get_total_compra(self):
        return self.__total_compra
-    
-    def set_codigo_producto(self, codigo_producto):
-        self.__codigo_producto = codigo_producto
 
     def get_codigo_producto(self):
        return self.__codigo_producto
 
-    def set_nombre_producto(self, nombre_producto):
-        self.__nombre_producto = nombre_producto
-
     def get_nombre_producto(self):
        return self.__nombre_producto
-    
-    def set_precio_unitario(self, precio_unitario):
-        self.__precio_unitario = precio_unitario
 
     def get_precio_unitario(self):
        return self.__precio_unitario
@@ -307,26 +222,14 @@ class DetalleEmpresa:
     def get_id_local(self):
         return self.__id_local
 
-    def set_nombre_local(self, nombre_local):
-        self.__nombre_local = nombre_local
-
     def get_nombre_local(self):
         return self.__nombre_local
-
-    def set_rut_local(self, rut_local):
-        self.__rut_local = rut_local
 
     def get_rut_local(self):
         return self.__rut_local
 
-    def set_direccion(self, direccion):
-        self.__direccion = direccion
-
     def get_direccion(self):
         return self.__direccion
-
-    def set_IVA(self, IVA):
-        self.__IVA = IVA
 
     def get_IVA(self):
         return self.__IVA
