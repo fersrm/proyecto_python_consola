@@ -210,15 +210,10 @@ def iniciar_menu_jefe_ventas(datos_usuario):
             estado_dia = datos_local.get_estado()
         else:
             print("----No se encontraron datos del local----")
-        
-        if estado_dia != 1:
-            estado = "Cerrado"
-        else:
-            estado = "Abierto"
 
         mostrar_mensaje_bienvenida(datos_usuario)
         opciones = [
-            ("1", f"El local está {estado}, ¿desea carbiarlo?"),
+            ("1", f"El local está {'abierto' if estado_dia == 1 else 'cerrado'}, ¿desea carbiarlo?"),
             ("2", "Realizar informes"),
             ("3", "Agregar nuevos productos"),
             ("4", "Salir")
