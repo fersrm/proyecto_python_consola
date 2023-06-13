@@ -116,10 +116,10 @@ def editar_carrito(carrito):
     if actualiza_cantidad:
         print("----Producto actualizado con exito----")
     else:
-        print("----Error al alctualizar producto----")
+        print("----Error al actualizar producto----")
 
 def eliminar_producto(carrito):
-    codigo_producto = input("Ingrese el codigo del producto: ").upper()
+    codigo_producto = input("Ingrese el código del producto: ").upper()
     eliminar_prodcuto = carrito.eliminar_producto(codigo_producto)
     os.system('cls')
     detalle_carrito = carrito.mostrar_detalle()
@@ -132,7 +132,7 @@ def eliminar_producto(carrito):
 def vaciar_carrito(carrito):
     os.system('cls')
     carrito.vaciar_carrito()
-    print("----Carrito de compra Vaciado con exito----")
+    print("----Carrito de compra vaciado con éxito----")
     
 # Funcionabilidad registrar cliente
 def selecionar_tabla(descripcion, elemnto_tabla):
@@ -190,7 +190,7 @@ def generar_ventas(tipo_venta, id_vendedor, carrito, datos_local):
         elif datos_cliente == 2:
             os.system('cls')
             print("----No se encontraron datos para el cliente especificado----")
-            print("-----------Comenzando con el registro del Cliente-----------")# ver si preguntar o de forma directa
+            print("-----------Comenzando con el registro del cliente-----------")# ver si preguntar o de forma directa
             cliente = registrar_cliente(run_cliente)
             if not cliente:
                 print("----Error: No se pudo registrar al cliente. Verifique los datos ingresados.----")
@@ -220,7 +220,7 @@ def generar_ventas(tipo_venta, id_vendedor, carrito, datos_local):
             IVA = datos_local.get_IVA()
             print(datos_local.mostrar_datos_empresa())
         else:
-            print("----No se ecnontraron datos del local----")
+            print("----No se encontraron datos del local----")
             IVA = 19
         if tipo_venta == 1:
             tipo = "Boleta"
@@ -284,7 +284,7 @@ def iniciar_menu_vendedor(datos_usuario):
         if datos_local:
             estado_dia = datos_local.get_estado()
         else:
-            print("----No se ecnontraron datos del local----")
+            print("----No se encontraron datos del local----")
 
         mostrar_mensaje_bienvenida(datos_usuario)
         if estado_dia != 1:

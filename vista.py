@@ -19,14 +19,14 @@ def iniciar_aplicacion():
         os.system('cls')
         # login y datos del bazar
         print("""
-         //////////////////
-        /////  LOGIN  ////
-       ////////////////// 
+         ///////////////////
+        /////  LOGIN  /////
+       ///////////////////
         """)
         if datos_local:
             print(datos_local.mostrar_datos_empresa())
         else:
-            print("No se ecnontraron datos del local")
+            print("No se encontraron datos del local")
         user, clave = login()
         if user and clave:
             datos = obtener_datos_usuario(user, clave)

@@ -373,6 +373,22 @@ def obtener_datos_empresa():
 #----------------------------------------------------------------------------------------
 # Consultas para el jefe de ventas
 #----------------------------------------------------------------------------------------
+# Funcionalidad cambiar estado
+def cambiar_estado_dia(nuevo_estado):
+    try:
+        with Conexion() as conexion:
+            cursor = conexion.get_cursor()
+            sql_query = ("UPDATE DATOS_EMPRESA SET estado = %s WHERE id_datos_empresa = 1 ;") 
+            cursor.execute(sql_query, (nuevo_estado,))
+            conexion.conexion.commit()
+        return True  
+    except pymysql.err.Error as error:
+        print(f"Error de base de datos: {error}")
+        return False  # Ocurrió un error en la operación de la base de datos
+    except Exception as error:
+        print(f"Error desconocido: {error}")
+        return False  # Ocurrió un error desconocido
+
 # Funciones para registrar un nuevo producto
 def tablas_registrar_producto():
     try:

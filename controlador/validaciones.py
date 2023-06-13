@@ -1,5 +1,5 @@
 import re  # Para expreciones regulares
-from datetime import datetime # para ña fechas
+from datetime import datetime # para la fechas
 
 def validar_numero(numero):
     numero = numero.strip()
