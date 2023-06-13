@@ -2,14 +2,16 @@ from controlador.consultas import obtener_datos_usuario, obtener_datos_empresa
 from menus_vista.opciones_menu import pausa
 from menus_vista.menu_jefe_venta import iniciar_menu_jefe_ventas 
 from menus_vista.menu_vendedor import iniciar_menu_vendedor
-
-# librerias externas
+import stdiomask # para la contraseña
 import os # para limpiar la consola
+
+
+
 
 # Funcion para pedir los datos al usuario
 def login():
     user = input("Ingrese su RUN: ")
-    clave = input("Ingrese su Contraseña: ")
+    clave = stdiomask.getpass("Ingrese su Contraseña: ", '*')
     return user, clave
 
 # Funcion para inciar el menu segun corresponda
@@ -55,7 +57,3 @@ def iniciar_aplicacion():
         iniciar_menu_vendedor(datos_usuario)
     else:
         print("----Rol de usuario no válido----")
-
-#--------------------------------------------
-if __name__ == "__main__":
-    iniciar_aplicacion()
