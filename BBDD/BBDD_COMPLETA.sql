@@ -496,7 +496,7 @@ INSERT INTO `bazar`.`DETALLE_BOLETAS` (`cantidad`, `total`, `producto_FK`, `bole
 -- Insert Datos del local
 -- -----------------------------------------------------
 INSERT INTO `bazar`.`DATOS_EMPRESA` (`nombre_empresa`, `rut_empresa`, `direccion_empresa`, `IVA`, `estado`) VALUES 
-('MONA','99888777-6','MONITAS321', 19, 1);
+('NONA','99888777-6','MONITAS #321', 19, 1);
 -- -----------------------------------------------------
 -- Procedimiento almacenado para generar una venta, boleta o factura
 -- -----------------------------------------------------
