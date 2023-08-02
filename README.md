@@ -1,5 +1,5 @@
 # proyecto_python_consola
-
+### Ejecute terminos_condiciones.py
 # LIBRERIAS A INSTALAR
 - prettytable
 - pymysql
